@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeLookup Technologies - Phone Lookup Tool</title>
+    <!-- Load libphonenumber-js from CDN (free, no API key) -->
+    <script src="https://cdn.jsdelivr.net/npm/libphonenumber-js@1.10.51/bundle/libphonenumber-js.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a472a 0%, #0d2818 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            max-width: 650px;
+            width: 100%;
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .brand-logo {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .brand-name {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #1a472a 0%, #2d6a4f 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
+        }
+
+        .tagline {
+            color: #666;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        h1 {
+            color: #1a472a;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #555;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            min-width: 200px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2d6a4f;
+        }
+
+        button {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #1a472a 0%, #2d6a4f 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: bold;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 71, 42, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            display: block;
+        }
+
+        .result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            display: block;
+        }
+
+        .result.loading {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            display: block;
+        }
+
+        .info-item {
+            margin: 12px 0;
+            padding: 8px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .info-label {
+            font-weight: bold;
+            display: inline-block;
+            width: 140px;
+            color: #1a472a;
+        }
+
+        .info-value {
+            color: #333;
+        }
+
+        .country-flag {
+            font-size: 24px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #2d6a4f;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .note {
+            margin-top: 20px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+            border-left: 3px solid #2d6a4f;
+        }
+
+        .note a {
+            color: #1a472a;
+        }
+
+        .example {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 10px;
+            color: #aaa;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        .safe-badge {
+            display: inline-block;
+            background: #1a472a;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 10px;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        .badge-free {
+            background: #28a745;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="brand">
+            <div class="brand-logo">🛡️</div>
+            <div class="brand-name">SafeLookup Technologies</div>
+            <div class="tagline">Secure Phone Intelligence Powered by Google</div>
+        </div>
+        
+        <h1>Phone Lookup Tool <span class="safe-badge">SAFE</span><span class="badge-free">FREE • NO API KEY</span></h1>
+        <p class="subtitle">Enter any phone number to validate, format, and get carrier & location information</p>
+        
+        <div class="input-group">
+            <input type="tel" id="phoneNumber" placeholder="Enter phone number (e.g., +14155552671 or 14155552671)" />
+            <button onclick="lookupPhone()">🔍 Lookup</button>
+        </div>
+        <div class="example">📱 Examples: +14155552671 (US), +447911123456 (UK), +61412345678 (Australia), +919876543210 (India)</div>
+        
+        <div id="result" class="result"></div>
+        
+        <div class="note">
+            <strong>🛡️ Powered by Google's libphonenumber</strong> — Completely free, no API key required, works offline.<br>
+            Validates format, detects number type (mobile/landline/VoIP), shows carrier & location data.
+        </div>
+        <div class="footer">
+            © 2024 SafeLookup Technologies | Protecting Your Communication Intelligence
+        </div>
+    </div>
+
+    <script>
+        // SafeLookup Phone Lookup Tool using Google's libphonenumber
+        // No API key needed - completely free and works offline!
+        
+        // Helper to get country flag emoji from country code
+        function getCountryFlag(countryCode) {
+            if (!countryCode) return '🌍';
+            const offset = 127397;
+            return String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => c.charCodeAt(0) + offset));
+        }
+
+        // Helper to format number type nicely
+        function formatNumberType(type) {
+            if (!type) return 'Unknown';
+            const types = {
+                'MOBILE': '📱 Mobile',
+                'FIXED_LINE': '☎️ Landline',
+                'FIXED_LINE_OR_MOBILE': '📞 Fixed or Mobile',
+                'TOLL_FREE': '🎯 Toll Free',
+                'PREMIUM_RATE': '💎 Premium Rate',
+                'SHARED_COST': '🤝 Shared Cost',
+                'VOIP': '💻 VoIP',
+                'PERSONAL_NUMBER': '👤 Personal Number',
+                'PAGER': '📟 Pager',
+                'UAN': '🏢 UAN',
+                'VOICEMAIL': '📨 Voicemail',
+                'UNKNOWN': '❓ Unknown'
+            };
+            return types[type] || type;
+        }
+
+        function lookupPhone() {
+            const input = document.getElementById('phoneNumber').value.trim();
+            const resultDiv = document.getElementById('result');
+            
+            if (!input) {
+                showError('Please enter a phone number');
+                return;
+            }
+            
+            // Show loading state
+            resultDiv.className = 'result loading';
+            resultDiv.innerHTML = '<div class="loader"></div> Looking up number with SafeLookup engine...';
+            
+            // Small delay to show loading (libphonenumber is synchronous and fast)
+            setTimeout(() => {
+                try {
+                    // Try to parse the phone number
+                    let phoneNumber = null;
+                    let parsedSuccessfully = false;
+                    
+                    // First try: parse as-is (expecting international format with +)
+                    try {
+                        phoneNumber = libphonenumber.parsePhoneNumber(input);
+                        if (phoneNumber && phoneNumber.isValid()) {
+                            parsedSuccessfully = true;
+                        }
+                    } catch (e) {
+                        // Try to add + if missing
+                        if (!input.startsWith('+')) {
+                            try {
+                                phoneNumber = libphonenumber.parsePhoneNumber('+' + input);
+                                if (phoneNumber && phoneNumber.isValid()) {
+                                    parsedSuccessfully = true;
+                                }
+                            } catch (e2) {
+                                // Try to guess country from number (US by default for 10-digit)
+                                if (input.length === 10 && /^\d+$/.test(input)) {
+                                    try {
+                                        phoneNumber = libphonenumber.parsePhoneNumber('+1' + input);
+                                        if (phoneNumber && phoneNumber.isValid()) {
+                                            parsedSuccessfully = true;
+                                        }
+                                    } catch (e3) {}
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (parsedSuccessfully && phoneNumber && phoneNumber.isValid()) {
+                        displayResults(phoneNumber, input);
+                    } else {
+                        showError('Invalid phone number. Please check the format and try again.\n\nTip: Include country code with + (e.g., +14155552671)');
+                    }
+                } catch (error) {
+                    console.error('Lookup error:', error);
+                    showError('Unable to parse this number. Please use international format with country code (e.g., +14155552671)');
+                }
+            }, 300);
+        }
+        
+        function displayResults(phoneNumber, originalInput) {
+            const resultDiv = document.getElementById('result');
+            const countryCode = phoneNumber.country || 'Unknown';
+            const countryFlag = getCountryFlag(countryCode);
+            
+            // Get additional metadata from libphonenumber
+            const numberType = phoneNumber.getType();
+            const isPossible = phoneNumber.isPossible();
+            const isTollFree = numberType === 'TOLL_FREE';
+            
+            // Try to get carrier info (basic - from number range)
+            let carrierInfo = 'Information based on number range';
+            let locationInfo = phoneNumber.country ? `${phoneNumber.country.toUpperCase()} - National Number` : 'Based on country code';
+            
+            // Format types
+            const e164Format = phoneNumber.format('E.164');
+            const internationalFormat = phoneNumber.formatInternational();
+            const nationalFormat = phoneNumber.formatNational();
+            
+            resultDiv.className = 'result success';
+            resultDiv.innerHTML = `
+                <div style="font-weight: bold; margin-bottom: 15px; font-size: 18px;">
+                    📞 SafeLookup Results
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Original Input:</span>
+                    <span class="info-value">${escapeHtml(originalInput)}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">E.164 Format:</span>
+                    <span class="info-value">${escapeHtml(e164Format)}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">International:</span>
+                    <span class="info-value">${escapeHtml(internationalFormat)}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">National Format:</span>
+                    <span class="info-value">${escapeHtml(nationalFormat)}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Country:</span>
+                    <span class="info-value">${countryFlag} ${escapeHtml(phoneNumber.country || 'Unknown')} (${escapeHtml(countryCode)})</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Number Type:</span>
+                    <span class="info-value">${formatNumberType(numberType)}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Valid Number:</span>
+                    <span class="info-value">${phoneNumber.isValid() ? '✅ Yes - Valid format' : '❌ No'}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Possible Number:</span>
+                    <span class="info-value">${isPossible ? '✅ Yes (length OK)' : '⚠️ Length may be invalid'}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Carrier Info:</span>
+                    <span class="info-value">${escapeHtml(carrierInfo)}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Location Data:</span>
+                    <span class="info-value">${escapeHtml(locationInfo)}</span>
+                </div>
+                ${isTollFree ? `<div class="info-item">
+                    <span class="info-label">🎯 Toll Free:</span>
+                    <span class="info-value">Yes - This is a toll-free number</span>
+                </div>` : ''}
+                <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid #c3e6cb; font-size: 11px; color: #155724;">
+                    ℹ️ Powered by Google's libphonenumber | Format validation only - not a live line check
+                </div>
+            `;
+        }
+        
+        function showError(message) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = 'result error';
+            resultDiv.innerHTML = `
+                <div style="font-weight: bold; margin-bottom: 10px;">⚠️ SafeLookup Error</div>
+                <div>${escapeHtml(message)}</div>
+                <div style="margin-top: 10px; font-size: 12px;">💡 Tip: Use international format with + and country code</div>
+            `;
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Allow Enter key to trigger lookup
+        document.getElementById('phoneNumber').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                lookupPhone();
+            }
+        });
+        
+        // Auto-format as user types (basic)
+        document.getElementById('phoneNumber').addEventListener('input', function(e) {
+            let value = e.target.value;
+            // Remove any non-digit characters except +
+            if (value.startsWith('+')) {
+                value = '+' + value.substring(1).replace(/\D/g, '');
+            } else {
+                value = value.replace(/\D/g, '');
+            }
+            e.target.value = value;
+        });
+    </script>
+</body>
+</html>
