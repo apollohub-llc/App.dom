@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Windows Authorization Panel</title>
+  <style>
+    body {
+      background: #0f0f0f;
+      color: #00ff9f;
+      font-family: Consolas, monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .box {
+      border: 1px solid #00ff9f;
+      padding: 25px;
+      width: 360px;
+      background: #121212;
+      box-shadow: 0 0 20px #00ff9f33;
+    }
+
+    .status {
+      margin-bottom: 10px;
+      color: #ff4d4d;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background: #000;
+      border: 1px solid #00ff9f;
+      color: #00ff9f;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      background: #00ff9f;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .hint {
+      margin-top: 12px;
+      font-size: 12px;
+      color: #888;
+    }
+
+    .error {
+      color: #ff4d4d;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <div class="status">Authorization: FALSE</div>
+
+    <label>Enter Password:</label>
+    <input type="password" id="password" placeholder="••••••••••••" />
+
+    <button onclick="checkPassword()">Access System</button>
+
+    <div class="hint">
+      Hint: Check the "source code"
+    </div>
+
+    <div class="error" id="error"></div>
+  </div>
+
+  <script>
+    // Fake auth logic (client-side only)
+    const correctPassword = "2444666668888888";
+
+    function checkPassword() {
+      const input = document.getElementById("password").value;
+      const error = document.getElementById("error");
+
+      if (input === correctPassword) {
+        window.location.href = "apps/adminpanelssh.html";
+      } else {
+        error.textContent = "ACCESS DENIED: Incorrect password.";
+      }
+    }
+  </script>
+
+</body>
+</html>
