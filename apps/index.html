@@ -166,6 +166,7 @@ footer{margin-top:100px;background:#0f172a;color:white;padding:80px 6% 30px;}
   };
 
   const app = initializeApp(firebaseConfig);
+console.log("Firebase App Config:", app.options);
   const db = getFirestore(app);
 
   onSnapshot(doc(db, "siteContent", "homepage"), (docSnap) => {
