@@ -1,250 +1,531 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PRIME-GOODS // ROOT_TERMINAL</title>
-<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ShopEasy Admin Panel</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Fira Code',monospace;}
-body{background:#0a0e14;color:#00ff66;padding:40px 4%;background-image:radial-gradient(rgba(0,30,10,0.4) 0%, transparent 80%);}
-::-webkit-scrollbar{width:6px;}
-::-webkit-scrollbar-track{background:#0a0e14;}
-::-webkit-scrollbar-thumb{background:#00441b;border-radius:3px;}
-::-webkit-scrollbar-thumb:hover{background:#00ff66;}
+:root{
+  --primary:#6366f1;
+  --secondary:#4f46e5;
+  --success:#22c55e;
+  --danger:#ef4444;
+  --warning:#f59e0b;
+  --bg:#f5f7fb;
+  --card:#ffffff;
+  --text:#111827;
+  --muted:#6b7280;
+  --shadow:0 10px 30px rgba(0,0,0,.08);
+  --radius:22px;
+}
 
-.terminal-header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px dashed #00ff66;padding-bottom:20px;margin-bottom:40px;}
-.terminal-header h1{font-size:1.8rem;text-shadow:0 0 10px rgba(0,255,102,0.5);font-weight:700;}
-.sys-status{background:#00220a;border:1px solid #00ff66;padding:6px 14px;border-radius:4px;font-size:0.85rem;}
-.view-btn{text-decoration:none;color:#0a0e14;background:#00ff66;padding:10px 18px;border-radius:4px;font-weight:700;box-shadow:0 0 15px rgba(0,255,102,0.3);transition:0.2s;}
-.view-btn:hover{background:#ffffff;box-shadow:0 0 20px #ffffff;}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:30px;}
-.terminal-card{background:#0f161e;border:1px solid #005522;padding:25px;border-radius:8px;position:relative;box-shadow:0 15px 35px rgba(0,0,0,0.5);}
-.terminal-card::before{content:'[SYS_MODULE]';position:absolute;top:-10px;left:15px;background:#0f161e;padding:0 8px;font-size:0.75rem;color:#00aa44;}
-.terminal-card h2{font-size:1.2rem;margin-bottom:20px;color:#ffffff;border-bottom:1px solid #005522;padding-bottom:8px;}
+body{
+  font-family:'Poppins',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
 
-.form-group{margin-bottom:18px;}
-.form-group label{display:block;font-size:0.8rem;color:#00aa44;margin-bottom:6px;text-transform:uppercase;}
-.form-group input, .form-group textarea, .form-group select{width:100%;background:#05080c;border:1px solid #005522;padding:12px;color:#00ff66;outline:none;border-radius:4px;font-size:0.9rem;}
-.form-group input:focus, .form-group textarea:focus{border-color:#00ff66;box-shadow:0 0 8px rgba(0,255,102,0.2);}
+/* SIDEBAR */
+.sidebar{
+  position:fixed;
+  left:0;
+  top:0;
+  width:270px;
+  height:100vh;
+  background:#111827;
+  color:white;
+  padding:30px;
+}
 
-.exe-btn{width:100%;background:transparent;border:1px solid #00ff66;color:#00ff66;padding:12px;font-weight:700;cursor:pointer;text-transform:uppercase;transition:0.2s;border-radius:4px;}
-.exe-btn:hover{background:rgba(0,255,102,0.1);text-shadow:0 0 5px #00ff66;}
+.logo{
+  font-size:1.8rem;
+  font-weight:700;
+  margin-bottom:40px;
+}
 
-.destruct-card{border:1px solid #ff3333;background:#1a0505;}
-.destruct-card::before{content:'[OMNINOUS_OVERRIDE]';color:#ff3333;background:#1a0505;}
-.destruct-card h2{color:#ff3333;border-bottom:1px solid #ff3333;}
-.destruct-btn{background:#ff3333;color:#000;border:none;box-shadow:0 0 15px rgba(255,51,51,0.4);font-weight:900;}
-.destruct-btn:hover{background:#ffffff;color:#ff3333;box-shadow:0 0 25px #ffffff;}
+.sidebar ul{
+  list-style:none;
+}
 
-.log-box{background:#05080c;border:1px solid #003311;height:250px;overflow-y:auto;padding:15px;font-size:0.85rem;color:#00aa44;}
-.log-item{margin-bottom:8px;line-height:1.4;}
-.log-item.del{color:#ff3333;}
-.log-item.add{color:#33b5ff;}
+.sidebar li{
+  margin:15px 0;
+}
 
-.disabled-overlay {
-    position: absolute; top:0; left:0; width:100%; height:100%;
-    background: rgba(10,14,20,0.9); display: flex; align-items: center;
-    justify-content: center; color: #ff3333; font-weight: bold; font-size: 1.2rem;
-    z-index: 10; border-radius: 8px; text-align: center; padding: 20px;
+.sidebar a{
+  text-decoration:none;
+  color:#d1d5db;
+  display:block;
+  padding:14px 18px;
+  border-radius:14px;
+  transition:.3s;
+}
+
+.sidebar a:hover,
+.sidebar a.active{
+  background:rgba(255,255,255,.08);
+  color:white;
+}
+
+/* MAIN */
+.main{
+  margin-left:270px;
+  padding:40px;
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:30px;
+}
+
+.topbar h1{
+  font-size:2rem;
+}
+
+.admin-badge{
+  background:var(--primary);
+  color:white;
+  padding:12px 18px;
+  border-radius:999px;
+}
+
+/* CARDS */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+  margin-bottom:35px;
+}
+
+.card{
+  background:var(--card);
+  padding:28px;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+
+.card h3{
+  color:var(--muted);
+  margin-bottom:10px;
+}
+
+.card h2{
+  font-size:2rem;
+}
+
+/* FORM */
+.form-box{
+  background:white;
+  padding:30px;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  margin-bottom:35px;
+}
+
+.form-box h2{
+  margin-bottom:25px;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:15px;
+}
+
+input{
+  width:100%;
+  padding:14px;
+  border:1px solid #ddd;
+  border-radius:12px;
+  outline:none;
+  font-family:inherit;
+}
+
+button{
+  border:none;
+  cursor:pointer;
+  font-family:inherit;
+}
+
+.btn-primary{
+  background:var(--primary);
+  color:white;
+  padding:14px 20px;
+  border-radius:12px;
+  transition:.3s;
+}
+
+.btn-primary:hover{
+  background:var(--secondary);
+}
+
+/* TABLE */
+.table-box{
+  background:white;
+  padding:30px;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th{
+  text-align:left;
+  padding:16px;
+  background:#f3f4f6;
+}
+
+td{
+  padding:16px;
+  border-bottom:1px solid #eee;
+}
+
+.product-img{
+  width:60px;
+  height:60px;
+  border-radius:12px;
+  object-fit:cover;
+}
+
+.action-buttons{
+  display:flex;
+  gap:10px;
+}
+
+.edit-btn{
+  background:var(--warning);
+  color:white;
+  padding:10px 14px;
+  border-radius:10px;
+}
+
+.delete-btn{
+  background:var(--danger);
+  color:white;
+  padding:10px 14px;
+  border-radius:10px;
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  background:#111827;
+  color:white;
+  padding:16px 25px;
+  border-radius:14px;
+  opacity:0;
+  transform:translateY(50px);
+  transition:.3s;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* MOBILE */
+@media(max-width:900px){
+
+.sidebar{
+  display:none;
+}
+
+.main{
+  margin-left:0;
+  padding:20px;
+}
+
+table{
+  display:block;
+  overflow-x:auto;
+}
+
 }
 </style>
 </head>
 <body>
 
-<div class="terminal-header">
-    <div>
-        <h1>PRIME_GOODS // CORE_OS_v4.26</h1>
-        <div style="margin-top:5px; color:#00aa44; font-size:0.8rem;">SECURE ENCRYPTED TERMINAL CONNECTION STABLE</div>
-    </div>
-    <div style="display:flex; gap:15px; align-items:center;">
-        <div class="sys-status" id="sys-pulse">SYS_STATUS: ONLINE</div>
-        <a href="index.html" class="view-btn">> LIVE_STORE</a>
-    </div>
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="logo">ShopEasy Admin</div>
+
+  <ul>
+    <li><a class="active" href="#">Dashboard</a></li>
+    <li><a href="#">Products</a></li>
+    <li><a href="#">Orders</a></li>
+    <li><a href="#">Customers</a></li>
+    <li><a href="#">Settings</a></li>
+  </ul>
 </div>
 
-<div class="grid">
-    <div class="terminal-card" id="module-hero">
-        <h2>CORE.BANNER_CONFIG</h2>
-        <form id="hero-form">
-            <div class="form-group"><label>Badge Tag</label><input type="text" id="inp-heroBadge"></div>
-            <div class="form-group"><label>Primary Header Line</label><input type="text" id="inp-heroTitle"></div>
-            <div class="form-group"><label>Context Paragraph</label><textarea id="inp-heroDesc" rows="2"></textarea></div>
-            <div class="form-group"><label>Asset Image URL</label><input type="text" id="inp-heroImg"></div>
-            <button type="submit" class="exe-btn">Execute Update</button>
-        </form>
+<!-- MAIN -->
+<div class="main">
+
+  <div class="topbar">
+    <h1>Dashboard</h1>
+    <div class="admin-badge">Admin</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+
+    <div class="card">
+      <h3>Total Products</h3>
+      <h2 id="totalProducts">0</h2>
     </div>
 
-    <div class="terminal-card" id="module-promo">
-        <h2>CAMPAIGN.PROMO_DATA</h2>
-        <form id="promo-form">
-            <div class="form-group"><label>Promo Header</label><input type="text" id="inp-promoTitle"></div>
-            <div class="form-group"><label>Promo Content Blueprint</label><textarea id="inp-promoDesc" rows="2"></textarea></div>
-            <button type="submit" class="exe-btn">Push Context Sync</button>
-        </form>
+    <div class="card">
+      <h3>Total Orders</h3>
+      <h2>124</h2>
     </div>
 
-    <div class="terminal-card" id="module-catalog">
-        <h2>CATALOG.INJECT_OBJECT</h2>
-        <form id="product-form">
-            <div class="form-group"><label>Object Identifier</label><input type="text" id="p-title" required></div>
-            <div class="form-group"><label>Value Denomination ($)</label><input type="number" id="p-price" required></div>
-            <div class="form-group"><label>Badge Flag String</label><input type="text" id="p-tag" placeholder="Best Seller / Trending"></div>
-            <div class="form-group"><label>Rank Metric Array</label>
-                <select id="p-rating">
-                    <option value="★★★★★">5 Stars [A+]</option>
-                    <option value="★★★★☆">4 Stars [B]</option>
-                    <option value="★★★☆☆">3 Stars [C]</option>
-                </select>
-            </div>
-            <div class="form-group"><label>Visual Matrix Endpoint URL</label><input type="text" id="p-img"></div>
-            <button type="submit" class="exe-btn">Inject To Production</button>
-        </form>
-    </div>
-    
-    <div class="terminal-card" id="module-inventory">
-        <h2>CATALOG.INVENTORY_STREAM</h2>
-        <div class="log-box" id="terminal-log-stream"></div>
+    <div class="card">
+      <h3>Total Revenue</h3>
+      <h2>$12,480</h2>
     </div>
 
-    <div class="terminal-card destruct-card" id="module-destruct">
-        <h2>SYS_MUTATION.CRITICAL_OVERRIDE</h2>
-        <div style="color:#ff6666; font-size:0.8rem; margin-bottom:15px; line-height:1.4;">
-            WARNING: Triggering the sequence forces an override array into production. Storefront locks out via Red Alert layout profile.
-        </div>
-        <div class="form-group">
-            <label style="color:#ff3333;">Type "CONFIRM" to validate system bypass</label>
-            <input type="text" id="destruct-verify" placeholder="Verification sequence..." style="border-color:#551111; color:#ff3333; background:#0f0303;">
-        </div>
-        <button id="destruct-trigger-btn" class="exe-btn destruct-btn">INITIATE SELF DESTRUCT</button>
+  </div>
+
+  <!-- Product Form -->
+  <div class="form-box">
+    <h2>Add / Edit Product</h2>
+
+    <div class="form-grid">
+      <input type="text" id="productName" placeholder="Product Name">
+
+      <input type="number" id="productPrice" placeholder="Price">
+
+      <input type="text" id="productImage" placeholder="Image URL">
+
+      <button class="btn-primary" id="saveBtn">
+        Add Product
+      </button>
     </div>
+  </div>
+
+  <!-- Product Table -->
+  <div class="table-box">
+
+    <h2 style="margin-bottom:20px;">
+      Products
+    </h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody id="productTable"></tbody>
+
+    </table>
+
+  </div>
+
 </div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getFirestore, doc, setDoc, collection, addDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+<div class="toast" id="toast"></div>
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyD-KtI3u0FJXXTyA1XRX6kz6iSXO1gSmQo",
-    authDomain: "decoy-d0c3f.firebaseapp.com",
-    databaseURL: "https://decoy-d0c3f-default-rtdb.firebaseio.com",
-    projectId: "decoy-d0c3f",
-    storageBucket: "decoy-d0c3f.firebasestorage.app",
-    messagingSenderId: "735739654588",
-    appId: "1:735739654588:web:09978f6bb3f268d1aa3bb9",
-    measurementId: "G-B2NTNZ3P9B"
-  };
+<script>
+let products = JSON.parse(localStorage.getItem('products')) || [
+{
+id:1,
+name:'Wireless Headphones',
+price:59.99,
+image:'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800'
+},
+{
+id:2,
+name:'Gaming Mouse',
+price:29.99,
+image:'https://images.unsplash.com/photo-1527814050087-3793815479db?w=800'
+}
+];
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const heroRef = doc(db, "siteContent", "homepage");
+const productTable = document.getElementById('productTable');
+const totalProducts = document.getElementById('totalProducts');
 
-  onSnapshot(heroRef, (snapshot) => {
-      if(snapshot.exists()) {
-          const d = snapshot.data();
-          if(d.lockdown === true) {
-              triggerLocalLockdownUI();
-          } else {
-              if (d.heroBadge !== undefined) document.getElementById('inp-heroBadge').value = d.heroBadge;
-              if (d.heroTitle !== undefined) document.getElementById('inp-heroTitle').value = d.heroTitle;
-              if (d.heroDesc !== undefined) document.getElementById('inp-heroDesc').value = d.heroDesc;
-              if (d.heroImg !== undefined) document.getElementById('inp-heroImg').value = d.heroImg;
-              if (d.promoTitle !== undefined) document.getElementById('inp-promoTitle').value = d.promoTitle;
-              if (d.promoDesc !== undefined) document.getElementById('inp-promoDesc').value = d.promoDesc;
-          }
-      }
-  }, (err) => { console.error("Snapshot dynamic fetch error: ", err); });
+const productName = document.getElementById('productName');
+const productPrice = document.getElementById('productPrice');
+const productImage = document.getElementById('productImage');
 
-  function triggerLocalLockdownUI() {
-      document.getElementById('sys-pulse').innerText = "SYS_STATUS: MUTATED_ERR";
-      document.getElementById('sys-pulse').style.borderColor = "#ff3333";
-      document.getElementById('sys-pulse').style.color = "#ff3333";
-      document.getElementById('sys-pulse').style.background = "#2b0000";
-      
-      const targets = ['module-hero', 'module-promo', 'module-catalog', 'module-inventory', 'module-destruct'];
-      targets.forEach(id => {
-          const el = document.getElementById(id);
-          if(el && !el.querySelector('.disabled-overlay')) {
-              const overlay = document.createElement('div');
-              overlay.className = 'disabled-overlay';
-              overlay.innerHTML = "SYSTEM OVERRIDE ACTIVE<br><span style='font-size:0.8rem;color:#aa2222;'>CRITICAL CORRUPTION STATUS</span>";
-              el.appendChild(overlay);
-          }
-      });
-  }
+const saveBtn = document.getElementById('saveBtn');
+const toast = document.getElementById('toast');
 
-  document.getElementById('hero-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      await setDoc(heroRef, {
-          heroBadge: document.getElementById('inp-heroBadge').value,
-          heroTitle: document.getElementById('inp-heroTitle').value,
-          heroDesc: document.getElementById('inp-heroDesc').value,
-          heroImg: document.getElementById('inp-heroImg').value
-      }, { merge: true });
-      alert("Hero Module Updated.");
-  });
+let editId = null;
 
-  document.getElementById('promo-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      await setDoc(heroRef, {
-          promoTitle: document.getElementById('inp-promoTitle').value,
-          promoDesc: document.getElementById('inp-promoDesc').value
-      }, { merge: true });
-      alert("Promo Module Updated.");
-  });
+function saveStorage(){
+localStorage.setItem(
+'products',
+JSON.stringify(products)
+);
+}
 
-  document.getElementById('product-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      await addDoc(collection(db, "products"), {
-          title: document.getElementById('p-title').value,
-          price: document.getElementById('p-price').value,
-          tag: document.getElementById('p-tag').value || 'New',
-          rating: document.getElementById('p-rating').value,
-          img: document.getElementById('p-img').value || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900'
-      });
-      document.getElementById('product-form').reset();
-  });
+function showToast(message){
+toast.textContent = message;
+toast.classList.add('show');
 
-  onSnapshot(collection(db, "products"), (snapshot) => {
-      const logBox = document.getElementById('terminal-log-stream');
-      logBox.innerHTML = '';
-      if(snapshot.empty) {
-          logBox.innerHTML = '<div class="log-item">[!] Inventory stream empty. Ready for core assignments.</div>';
-          return;
-      }
-      snapshot.forEach((productDoc) => {
-          const p = productDoc.data();
-          const row = document.createElement('div');
-          row.className = 'log-item';
-          row.style.display = 'flex';
-          row.style.justifyContent = 'space-between';
-          row.innerHTML = `
-              <span>> TRACE: ${p.title.substring(0,18)}... ($${p.price})</span>
-              <span class="del" data-id="${productDoc.id}" style="cursor:pointer; font-weight:bold;">[PURGE]</span>
-          `;
-          logBox.appendChild(row);
-      });
+setTimeout(()=>{
+toast.classList.remove('show');
+},2000);
+}
 
-      document.querySelectorAll('.del').forEach(btn => {
-          btn.addEventListener('click', async (e) => {
-              const id = e.target.getAttribute('data-id');
-              await deleteDoc(doc(db, "products", id));
-          });
-      });
-  });
+function updateStats(){
+totalProducts.textContent = products.length;
+}
 
-  document.getElementById('destruct-trigger-btn').addEventListener('click', async () => {
-      const verificationValue = document.getElementById('destruct-verify').value;
-      if(verificationValue === "CONFIRM") {
-          if(confirm("Force frontend lockdown?")) {
-              await setDoc(heroRef, { lockdown: true }, { merge: true });
-              triggerLocalLockdownUI();
-          }
-      } else {
-          alert("CORRUPTION FAILURE: Verification sequence string mismatch.");
-      }
-  });
+function renderProducts(){
+
+productTable.innerHTML = "";
+
+products.forEach(product=>{
+
+productTable.innerHTML += `
+<tr>
+
+<td>
+<img 
+src="${product.image}" 
+class="product-img">
+</td>
+
+<td>${product.name}</td>
+
+<td>$${product.price}</td>
+
+<td>
+<div class="action-buttons">
+
+<button 
+class="edit-btn"
+onclick="editProduct(${product.id})">
+Edit
+</button>
+
+<button
+class="delete-btn"
+onclick="deleteProduct(${product.id})">
+Delete
+</button>
+
+</div>
+</td>
+
+</tr>
+`;
+
+});
+
+updateStats();
+saveStorage();
+}
+
+saveBtn.addEventListener('click', ()=>{
+
+const name = productName.value.trim();
+const price = productPrice.value.trim();
+const image = productImage.value.trim();
+
+if(!name || !price || !image){
+showToast('Fill all fields');
+return;
+}
+
+if(editId){
+
+products = products.map(product=>{
+
+if(product.id === editId){
+return {
+...product,
+name,
+price,
+image
+};
+}
+
+return product;
+
+});
+
+showToast('Product updated');
+
+saveBtn.textContent = 'Add Product';
+editId = null;
+
+}else{
+
+products.push({
+id:Date.now(),
+name,
+price,
+image
+});
+
+showToast('Product added');
+
+}
+
+productName.value = "";
+productPrice.value = "";
+productImage.value = "";
+
+renderProducts();
+
+});
+
+function editProduct(id){
+
+const product = products.find(p=>p.id === id);
+
+productName.value = product.name;
+productPrice.value = product.price;
+productImage.value = product.image;
+
+editId = id;
+
+saveBtn.textContent = 'Update Product';
+
+window.scrollTo({
+top:0,
+behavior:'smooth'
+});
+
+}
+
+function deleteProduct(id){
+
+products = products.filter(
+product => product.id !== id
+);
+
+renderProducts();
+
+showToast('Product deleted');
+
+}
+
+renderProducts();
 </script>
+
 </body>
 </html>
