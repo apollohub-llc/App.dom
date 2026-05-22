@@ -128,10 +128,12 @@ body{background:#0a0e14;color:#00ff66;padding:40px 4%;background-image:radial-gr
   const firebaseConfig = {
     apiKey: "AIzaSyD-KtI3u0FJXXTyA1XRX6kz6iSXO1gSmQo",
     authDomain: "decoy-d0c3f.firebaseapp.com",
+    databaseURL: "https://decoy-d0c3f-default-rtdb.firebaseio.com",
     projectId: "decoy-d0c3f",
     storageBucket: "decoy-d0c3f.firebasestorage.app",
     messagingSenderId: "735739654588",
-    appId: "1:735739654588:web:09978f6bb3f268d1aa3bb9"
+    appId: "1:735739654588:web:d9e205dcc13cab82aa3bb9",
+    measurementId: "G-XEY6BG1871"
   };
 
   const app = initializeApp(firebaseConfig);
@@ -152,7 +154,7 @@ body{background:#0a0e14;color:#00ff66;padding:40px 4%;background-image:radial-gr
               if (d.promoDesc !== undefined) document.getElementById('inp-promoDesc').value = d.promoDesc;
           }
       }
-  }, (err) => { alert("Database permission error! Check Firestore Rules."); });
+  }, (err) => { console.error("Snapshot dynamic fetch error: ", err); });
 
   function triggerLocalLockdownUI() {
       document.getElementById('sys-pulse').innerText = "SYS_STATUS: MUTATED_ERR";
@@ -172,7 +174,6 @@ body{background:#0a0e14;color:#00ff66;padding:40px 4%;background-image:radial-gr
       });
   }
 
-  // FIXED: { merge: true } stops forms from erasing each other's parameters
   document.getElementById('hero-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       await setDoc(heroRef, {
