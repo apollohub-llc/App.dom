@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRIME-GOODS // ROOT_TERMINAL</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Fira Code',monospace;}
+body{background:#0a0e14;color:#00ff66;padding:40px 4%;background-image:radial-gradient(rgba(0,30,10,0.4) 0%, transparent 80%);}
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:#0a0e14;}
+::-webkit-scrollbar-thumb{background:#00441b;border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:#00ff66;}
+
+.terminal-header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px dashed #00ff66;padding-bottom:20px;margin-bottom:40px;}
+.terminal-header h1{font-size:1.8rem;text-shadow:0 0 10px rgba(0,255,102,0.5);font-weight:700;}
+.sys-status{background:#00220a;border:1px solid #00ff66;padding:6px 14px;border-radius:4px;font-size:0.85rem;}
+.view-btn{text-decoration:none;color:#0a0e14;background:#00ff66;padding:10px 18px;border-radius:4px;font-weight:700;box-shadow:0 0 15px rgba(0,255,102,0.3);transition:0.2s;}
+.view-btn:hover{background:#ffffff;box-shadow:0 0 20px #ffffff;}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:30px;}
+.terminal-card{background:#0f161e;border:1px solid #005522;padding:25px;border-radius:8px;position:relative;box-shadow:0 15px 35px rgba(0,0,0,0.5);}
+.terminal-card::before{content:'[SYS_MODULE]';position:absolute;top:-10px;left:15px;background:#0f161e;padding:0 8px;font-size:0.75rem;color:#00aa44;}
+.terminal-card h2{font-size:1.2rem;margin-bottom:20px;color:#ffffff;border-bottom:1px solid #005522;padding-bottom:8px;}
+
+.form-group{margin-bottom:18px;}
+.form-group label{display:block;font-size:0.8rem;color:#00aa44;margin-bottom:6px;text-transform:uppercase;}
+.form-group input, .form-group textarea, .form-group select{width:100%;background:#05080c;border:1px solid #005522;padding:12px;color:#00ff66;outline:none;border-radius:4px;font-size:0.9rem;}
+.form-group input:focus, .form-group textarea:focus{border-color:#00ff66;box-shadow:0 0 8px rgba(0,255,102,0.2);}
+
+.exe-btn{width:100%;background:transparent;border:1px solid #00ff66;color:#00ff66;padding:12px;font-weight:700;cursor:pointer;text-transform:uppercase;transition:0.2s;border-radius:4px;}
+.exe-btn:hover{background:rgba(0,255,102,0.1);text-shadow:0 0 5px #00ff66;}
+
+/* DESTRUCT SPECIFIC PROTOCOLS */
+.destruct-card{border:1px solid #ff3333;background:#1a0505;}
+.destruct-card::before{content:'[OMNINOUS_OVERRIDE]';color:#ff3333;background:#1a0505;}
+.destruct-card h2{color:#ff3333;border-bottom:1px solid #ff3333;}
+.destruct-btn{background:#ff3333;color:#000;border:none;box-shadow:0 0 15px rgba(255,51,51,0.4);font-weight:900;}
+.destruct-btn:hover{background:#ffffff;color:#ff3333;box-shadow:0 0 25px #ffffff;}
+
+.log-box{background:#05080c;border:1px solid #003311;height:250px;overflow-y:auto;padding:15px;font-size:0.85rem;color:#00aa44;}
+.log-item{margin-bottom:8px;line-height:1.4;}
+.log-item.del{color:#ff3333;}
+.log-item.add{color:#33b5ff;}
+
+.disabled-overlay {
+    position: absolute; top:0; left:0; width:100%; height:100%;
+    background: rgba(10,14,20,0.9); display: flex; align-items: center;
+    justify-content: center; color: #ff3333; font-weight: bold; font-size: 1.2rem;
+    z-index: 10; border-radius: 8px; text-align: center; padding: 20px;
+}
+</style>
+</head>
+<body>
+
+<div class="terminal-header">
+    <div>
+        <h1>PRIME_GOODS // CORE_OS_v4.26</h1>
+        <div style="margin-top:5px; color:#00aa44; font-size:0.8rem;">SECURE ENCRYPTED TERMINAL CONNECTION STABLE</div>
+    </div>
+    <div style="display:flex; gap:15px; align-items:center;">
+        <div class="sys-status" id="sys-pulse">SYS_STATUS: ONLINE</div>
+        <a href="index.html" class="view-btn">> LIVE_STORE</a>
+    </div>
+</div>
+
+<div class="grid">
+    <!-- HERO EDITOR -->
+    <div class="terminal-card" id="module-hero">
+        <h2>CORE.BANNER_CONFIG</h2>
+        <form id="hero-form">
+            <div class="form-group"><label>Badge Tag</label><input type="text" id="inp-heroBadge"></div>
+            <div class="form-group"><label>Primary Header Line</label><input type="text" id="inp-heroTitle"></div>
+            <div class="form-group"><label>Context Paragraph</label><textarea id="inp-heroDesc" rows="2"></textarea></div>
+            <div class="form-group"><label>Asset Image URL</label><input type="text" id="inp-heroImg"></div>
+            <button type="submit" class="exe-btn">Execute Update</button>
+        </form>
+    </div>
+
+    <!-- PROMO EDITOR -->
+    <div class="terminal-card" id="module-promo">
+        <h2>CAMPAIGN.PROMO_DATA</h2>
+        <form id="promo-form">
+            <div class="form-group"><label>Promo Header</label><input type="text" id="inp-promoTitle"></div>
+            <div class="form-group"><label>Promo Content Blueprint</label><textarea id="inp-promoDesc" rows="2"></textarea></div>
+            <button type="submit" class="exe-btn">Push Context Sync</button>
+        </form>
+    </div>
+
+    <!-- CATALOG MANAGER -->
+    <div class="terminal-card" id="module-catalog">
+        <h2>CATALOG.INJECT_OBJECT</h2>
+        <form id="product-form">
+            <div class="form-group"><label>Object Identifier</label><input type="text" id="p-title" required></div>
+            <div class="form-group"><label>Value Denomination ($)</label><input type="number" id="p-price" required></div>
+            <div class="form-group"><label>Badge Flag String</label><input type="text" id="p-tag" placeholder="Best Seller / Trending"></div>
+            <div class="form-group"><label>Rank Metric Array</label>
+                <select id="p-rating">
+                    <option value="★★★★★">5 Stars [A+]</option>
+                    <option value="★★★★☆">4 Stars [B]</option>
+                    <option value="★★★☆☆">3 Stars [C]</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Visual Matrix Endpoint URL</label><input type="text" id="p-img"></div>
+            <button type="submit" class="exe-btn">Inject To Production</button>
+        </form>
+    </div>
+    
+    <!-- TERMINAL LOGGER / DISPOSAL MONITOR -->
+    <div class="terminal-card" id="module-inventory">
+        <h2>CATALOG.INVENTORY_STREAM</h2>
+        <div class="log-box" id="terminal-log-stream">
+            <!-- Items stream instantly -->
+        </div>
+    </div>
+
+    <!-- IRREVERSIBLE CRITICAL OVERRIDE PROTOCOL -->
+    <div class="terminal-card destruct-card" id="module-destruct">
+        <h2>SYS_MUTATION.CRITICAL_OVERRIDE</h2>
+        <div style="color:#ff6666; font-size:0.8rem; margin-bottom:15px; line-height:1.4;">
+            WARNING: Triggering the sequence encrypts and stores an irreversible lockdown status array into the live cluster environment. Front-facing components will render completely locked out under Red Alert profiles.
+        </div>
+        <div class="form-group">
+            <label style="color:#ff3333;">Type "CONFIRM" to validate system bypass</label>
+            <input type="text" id="destruct-verify" placeholder="Verification sequence..." style="border-color:#551111; color:#ff3333; background:#0f0303;">
+        </div>
+        <button id="destruct-trigger-btn" class="exe-btn destruct-btn">INITIATE SELF DESTRUCT</button>
+    </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getFirestore, doc, getDoc, setDoc, collection, addDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD-KtI3u0FJXXTyA1XRX6kz6iSXO1gSmQo",
+    authDomain: "decoy-d0c3f.firebaseapp.com",
+    projectId: "decoy-d0c3f",
+    storageBucket: "decoy-d0c3f.firebasestorage.app",
+    messagingSenderId: "735739654588",
+    appId: "1:735739654588:web:09978f6bb3f268d1aa3bb9"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const heroRef = doc(db, "siteContent", "homepage");
+
+  // Main system configuration state monitoring
+  onSnapshot(heroRef, (snapshot) => {
+      if(snapshot.exists()) {
+          const d = snapshot.data();
+          if(d.lockdown === true) {
+              triggerLocalLockdownUI();
+          } else {
+              document.getElementById('inp-heroBadge').value = d.heroBadge || '';
+              document.getElementById('inp-heroTitle').value = d.heroTitle || '';
+              document.getElementById('inp-heroDesc').value = d.heroDesc || '';
+              document.getElementById('inp-heroImg').value = d.heroImg || '';
+              document.getElementById('inp-promoTitle').value = d.promoTitle || '';
+              document.getElementById('inp-promoDesc').value = d.promoDesc || '';
+          }
+      }
+  });
+
+  function triggerLocalLockdownUI() {
+      document.getElementById('sys-pulse').innerText = "SYS_STATUS: MUTATED_ERR";
+      document.getElementById('sys-pulse').style.borderColor = "#ff3333";
+      document.getElementById('sys-pulse').style.color = "#ff3333";
+      document.getElementById('sys-pulse').style.background = "#2b0000";
+      
+      const targets = ['module-hero', 'module-promo', 'module-catalog', 'module-inventory', 'module-destruct'];
+      targets.forEach(id => {
+          const el = document.getElementById(id);
+          if(el && !el.querySelector('.disabled-overlay')) {
+              const overlay = document.createElement('div');
+              overlay.className = 'disabled-overlay';
+              overlay.innerHTML = "SYSTEM OVERRIDE ACTIVE<br><span style='font-size:0.8rem;color:#aa2222;'>CRITICAL CORRUPTION STATUS</span>";
+              el.appendChild(overlay);
+          }
+      });
+  }
+
+  // Update Core Components Text Blocks
+  document.getElementById('hero-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await setDoc(heroRef, {
+          heroBadge: document.getElementById('inp-heroBadge').value,
+          heroTitle: document.getElementById('inp-heroTitle').value,
+          heroDesc: document.getElementById('inp-heroDesc').value,
+          heroImg: document.getElementById('inp-heroImg').value
+      }, { merge: true });
+  });
+
+  document.getElementById('promo-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await setDoc(heroRef, {
+          promoTitle: document.getElementById('inp-promoTitle').value,
+          promoDesc: document.getElementById('inp-promoDesc').value
+      }, { merge: true });
+  });
+
+  // Inject Product Node
+  document.getElementById('product-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await addDoc(collection(db, "products"), {
+          title: document.getElementById('p-title').value,
+          price: document.getElementById('p-price').value,
+          tag: document.getElementById('p-tag').value || 'New',
+          rating: document.getElementById('p-rating').value,
+          img: document.getElementById('p-img').value || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900'
+      });
+      document.getElementById('product-form').reset();
+  });
+
+  // Render Product Inventory Database Traces
+  onSnapshot(collection(db, "products"), (snapshot) => {
+      const logBox = document.getElementById('terminal-log-stream');
+      logBox.innerHTML = '';
+      if(snapshot.empty) {
+          logBox.innerHTML = '<div class="log-item">[!] Inventory stream empty. Ready for core assignments.</div>';
+          return;
+      }
+      snapshot.forEach((productDoc) => {
+          const p = productDoc.data();
+          const row = document.createElement('div');
+          row.className = 'log-item';
+          row.style.display = 'flex';
+          row.style.justifyContent = 'space-between';
+          row.innerHTML = `
+              <span>> TRACE: ${p.title.substring(0,18)}... ($${p.price})</span>
+              <span class="del" data-id="${productDoc.id}" style="cursor:pointer; font-weight:bold;">[PURGE]</span>
+          `;
+          logBox.appendChild(row);
+      });
+
+      // Purge handler
+      document.querySelectorAll('.del').forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+              const id = e.target.getAttribute('data-id');
+              await deleteDoc(doc(db, "products", id));
+          });
+      });
+  });
+
+  // Self Destruct Trigger Protocol
+  document.getElementById('destruct-trigger-btn').addEventListener('click', async () => {
+      const verificationValue = document.getElementById('destruct-verify').value;
+      if(verificationValue === "CONFIRM") {
+          if(confirm("CRITICAL: You are about to initiate website self-destruct. This forces the storefront into immediate lockdown. Proceed?")) {
+              await setDoc(heroRef, { lockdown: true }, { merge: true });
+              triggerLocalLockdownUI();
+          }
+      } else {
+          alert("CORRUPTION FAILURE: Verification sequence string mismatch.");
+      }
+  });
+</script>
+</body>
+</html>
