@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body, html { margin:0; padding:0; width:100%; min-height:100%; overflow-x:hidden; background:#fff; font-family: sans-serif; }
+        #site-canvas { position:relative; width:100%; max-width:1440px; height:2000px; background-color:rgb(0, 0, 0); background-image:none; background-size:cover; background-position:center; margin:0 auto; overflow:hidden; }
+        .dropped-element { position:absolute; display:flex; align-items:center; justify-content:center; box-sizing: border-box; transition: opacity 0.2s; }
+        .dropped-element > * { width:100%; height:100%; object-fit:cover; border-radius:12px; border:none; margin:0; box-sizing: border-box; }
+        textarea { resize: none; box-sizing: border-box; padding: 10px; }
+        button { cursor: pointer; transition: transform 0.1s; background-size: cover; background-position: center; }
+        button:active { transform: scale(0.98); }
+        @media (min-width: 601px) { 
+            #site-canvas { width: 100%; } 
+            #el-0 { left:3.1855%; top:94.8729px; width:47.8553%; height:98.4646px; z-index:40 !important; opacity:1; }
+            #el-0 > * { font-size:64px !important; }
+            #el-1 { left:5.0768%; top:163.889px; width:31.4133%; height:96.5417px; z-index:40 !important; opacity:1; }
+            #el-1 > * { font-size:59px !important; }
+            #el-2 { left:12.4834%; top:314.887px; width:70.5526%; height:1255.23px; z-index:10 !important; opacity:1; }
+            #el-3 { left:15.4954%; top:336.127px; width:35.4112%; height:96.5542px; z-index:40 !important; opacity:1; }
+            #el-3 > * { font-size:91px !important; }
+            #el-4 { left:17.3608%; top:473.557px; width:60.1774%; height:1001.22px; z-index:10 !important; opacity:1; }
+            #el-5 { left:21.3560%; top:723.041px; width:49.1087%; height:51.3718px; z-index:40 !important; opacity:1; }
+            #el-5 > * { font-size:14px !important; }
+            #el-6 { left:23.3489%; top:871.443px; width:46.0195%; height:57.1083px; z-index:30 !important; opacity:1; }
+            #el-6 > * { font-size:40px !important; }
+            #el-7 { left:22.4843%; top:554.885px; width:47.4074%; height:69.9921px; z-index:40 !important; opacity:1; }
+            #el-7 > * { font-size:46px !important; }
+        }
+        @media (max-width: 600px) { 
+            #site-canvas { width: 100vw; max-width: 100vw; } 
+            #el-0 { left:10.8730%; top:94.8729px; width:163.3461%; height:98.4646px; z-index:40 !important; opacity:1; }
+            #el-0 > * { font-size:64px !important; }
+            #el-1 { left:17.3289%; top:163.889px; width:107.2240%; height:96.5417px; z-index:40 !important; opacity:1; }
+            #el-1 > * { font-size:59px !important; }
+            #el-2 { left:42.6101%; top:314.887px; width:240.8195%; height:1255.23px; z-index:10 !important; opacity:1; }
+            #el-3 { left:52.8909%; top:336.127px; width:120.8701%; height:96.5542px; z-index:40 !important; opacity:1; }
+            #el-3 > * { font-size:91px !important; }
+            #el-4 { left:59.2581%; top:473.557px; width:205.4056%; height:1001.22px; z-index:10 !important; opacity:1; }
+            #el-5 { left:72.8952%; top:723.041px; width:167.6243%; height:51.3718px; z-index:40 !important; opacity:1; }
+            #el-5 > * { font-size:14px !important; }
+            #el-6 { left:79.6976%; top:871.443px; width:157.0797%; height:57.1083px; z-index:30 !important; opacity:1; }
+            #el-6 > * { font-size:40px !important; }
+            #el-7 { left:76.7464%; top:554.885px; width:161.8173%; height:69.9921px; z-index:40 !important; opacity:1; }
+            #el-7 > * { font-size:46px !important; }
+        }
+    </style>
+</head>
+<body>
+    <div id="site-canvas">
+        <div id="el-0" class="dropped-element"><h2 style="font-size: 64px; color: rgb(0, 255, 0);">Web Authorization:</h2></div>
+        <div id="el-1" class="dropped-element"><h2 id="auth-status" style="font-size: 59px; color: rgb(255, 0, 0);">𝙵𝚊𝚕𝚜𝚎</h2></div>
+        <div id="el-2" class="dropped-element"><div style="border: 2px solid rgb(51, 51, 51); background: rgba(0, 0, 0, 0.05); width: 100%; height: 100%; border-radius: 12px;"></div></div>
+        <div id="el-3" class="dropped-element"><h2 style="font-size: 91px; color: rgb(0, 255, 0);">ᴘᴀssᴡᴏʀᴅ:</h2></div>
+        <div id="el-4" class="dropped-element"><div style="border: 2px solid rgb(51, 51, 51); background: none rgb(79, 79, 79); width: 100%; height: 100%; border-radius: 12px;"></div></div>
+        <div id="el-5" class="dropped-element"><input type="password" id="pass-input" placeholder="Enter password..." style="border: 1px solid rgb(204, 204, 204); border-radius: 12px; padding: 10px; width: 100%; height: 100%; font-size: 14px;"></input></div>
+        <div id="el-6" class="dropped-element"><button id="auth-btn" style="background: rgb(79, 70, 229); color: white; border: none; border-radius: 12px; width: 100%; height: 100%; cursor: pointer; font-size: 40px;">authorize</button></div>
+        <div id="el-7" class="dropped-element"><p style="font-size: 46px; color: rgb(107, 250, 117);">Authorization to Adminpanel</p></div>
+    </div>
+
+    <script>
+        // Set your authorized password here
+        const VALID_PASSWORD = "admin1234"; 
+
+        const authStatus = document.getElementById('auth-status');
+        const passInput = document.getElementById('pass-input');
+        const authBtn = document.getElementById('auth-btn');
+
+        authBtn.addEventListener('click', () => {
+            const enteredPass = passInput.value.trim();
+            
+            if(enteredPass === VALID_PASSWORD) {
+                authStatus.textContent = "𝚃𝚛𝚞𝚎";
+                authStatus.style.color = "rgb(0, 255, 0)";
+                // Redirect to admin panel after success
+                setTimeout(() => {
+                    window.location.href = "apps/adminpanelssh.html";
+                }, 1000);
+            } else {
+                authStatus.textContent = "𝙵𝚊𝚕𝚜𝚎";
+                authStatus.style.color = "rgb(255, 0, 0)";
+                passInput.value = ""; // Clear input on wrong password
+                alert("Invalid password! Please try again.");
+            }
+        });
+    </script>
+</body>
+</html>
