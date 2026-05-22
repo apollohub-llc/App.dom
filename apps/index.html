@@ -109,9 +109,9 @@ footer{margin-top:100px;background:#0f172a;color:white;padding:80px 6% 30px;}
 
     <section class="hero">
         <div class="hero-card" id="hero-bg">
-            <div class="hero-badge" id="hero-badge">Loading Parameters...</div>
-            <h1 id="hero-title">Verifying Connection Arrays...</h1>
-            <p id="hero-desc">Connecting to cloud storage networks...</p>
+            <div class="hero-badge" id="hero-badge">🔥 Premium Summer Collection</div>
+            <h1 id="hero-title">Luxury Shopping Experience Starts Here.</h1>
+            <p id="hero-desc">Discover premium electronics, accessories, and lifestyle products.</p>
             <div class="hero-buttons">
                 <a href="#" class="btn btn-primary">Shop Now</a>
                 <a href="#" class="btn btn-secondary">Browse Collection</a>
@@ -137,8 +137,8 @@ footer{margin-top:100px;background:#0f172a;color:white;padding:80px 6% 30px;}
     </section>
 
     <section class="promo">
-        <h2 id="promo-title">Loading...</h2>
-        <p id="promo-desc">...</p>
+        <h2 id="promo-title">Up to 50% Off Selected Products</h2>
+        <p id="promo-desc">Exclusive limited-time offers on premium collections.</p>
         <a href="#" class="btn btn-secondary">Explore Sale</a>
     </section>
 
@@ -171,6 +171,7 @@ footer{margin-top:100px;background:#0f172a;color:white;padding:80px 6% 30px;}
 
   // Sync Global Display Variables
   onSnapshot(doc(db, "siteContent", "homepage"), (docSnap) => {
+      // If document exists, pull data. If NOT, default parameters are already hardcoded in HTML fallback layout.
       if (docSnap.exists()) {
           const data = docSnap.data();
           
@@ -184,7 +185,9 @@ footer{margin-top:100px;background:#0f172a;color:white;padding:80px 6% 30px;}
           document.getElementById('hero-badge').innerText = data.heroBadge || "🔥 Premium Summer Collection";
           document.getElementById('hero-title').innerText = data.heroTitle || "Luxury Shopping Experience Starts Here.";
           document.getElementById('hero-desc').innerText = data.heroDesc || "Discover premium electronics, accessories, and lifestyle products.";
-          if(data.heroImg) document.getElementById('hero-bg').style.backgroundImage = `linear-gradient(rgba(15,23,42,.65),rgba(15,23,42,.65)), url('${data.heroImg}')`;
+          if(data.heroImg) {
+              document.getElementById('hero-bg').style.backgroundImage = `linear-gradient(rgba(15,23,42,.65),rgba(15,23,42,.65)), url('${data.heroImg}')`;
+          }
           
           document.getElementById('promo-title').innerText = data.promoTitle || "Up to 50% Off Selected Products";
           document.getElementById('promo-desc').innerText = data.promoDesc || "Exclusive limited-time offers on premium collections.";
@@ -195,11 +198,17 @@ footer{margin-top:100px;background:#0f172a;color:white;padding:80px 6% 30px;}
   onSnapshot(collection(db, "products"), (snapshot) => {
       const container = document.getElementById('products-container');
       container.innerHTML = '';
+      
+      if (snapshot.empty) {
+          container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--muted); padding: 40px;">No products available right now.</div>';
+          return;
+      }
+
       snapshot.forEach((productDoc) => {
           const item = productDoc.data();
           const cardHtml = `
             <div class="product-card">
-                <div class="product-image"><img src="${item.img || 'https://via.placeholder.com/300'}" alt="Product"></div>
+                <div class="product-image"><img src="${item.img || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900'}" alt="Product"></div>
                 <div class="product-content">
                     <div class="tag">${item.tag || 'New'}</div>
                     <div class="product-title">${item.title}</div>
