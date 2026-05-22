@@ -32,7 +32,6 @@ body{background:#0a0e14;color:#00ff66;padding:40px 4%;background-image:radial-gr
 .exe-btn{width:100%;background:transparent;border:1px solid #00ff66;color:#00ff66;padding:12px;font-weight:700;cursor:pointer;text-transform:uppercase;transition:0.2s;border-radius:4px;}
 .exe-btn:hover{background:rgba(0,255,102,0.1);text-shadow:0 0 5px #00ff66;}
 
-/* DESTRUCT SPECIFIC PROTOCOLS */
 .destruct-card{border:1px solid #ff3333;background:#1a0505;}
 .destruct-card::before{content:'[OMNINOUS_OVERRIDE]';color:#ff3333;background:#1a0505;}
 .destruct-card h2{color:#ff3333;border-bottom:1px solid #ff3333;}
@@ -66,7 +65,6 @@ body{background:#0a0e14;color:#00ff66;padding:40px 4%;background-image:radial-gr
 </div>
 
 <div class="grid">
-    <!-- HERO EDITOR -->
     <div class="terminal-card" id="module-hero">
         <h2>CORE.BANNER_CONFIG</h2>
         <form id="hero-form">
@@ -78,7 +76,6 @@ body{background:#0a0e14;color:#00ff66;padding:40px 4%;background-image:radial-gr
         </form>
     </div>
 
-    <!-- PROMO EDITOR -->
     <div class="terminal-card" id="module-promo">
         <h2>CAMPAIGN.PROMO_DATA</h2>
         <form id="promo-form">
@@ -88,7 +85,6 @@ body{background:#0a0e14;color:#00ff66;padding:40px 4%;background-image:radial-gr
         </form>
     </div>
 
-    <!-- CATALOG MANAGER -->
     <div class="terminal-card" id="module-catalog">
         <h2>CATALOG.INJECT_OBJECT</h2>
         <form id="product-form">
@@ -107,19 +103,15 @@ body{background:#0a0e14;color:#00ff66;padding:40px 4%;background-image:radial-gr
         </form>
     </div>
     
-    <!-- TERMINAL LOGGER / DISPOSAL MONITOR -->
     <div class="terminal-card" id="module-inventory">
         <h2>CATALOG.INVENTORY_STREAM</h2>
-        <div class="log-box" id="terminal-log-stream">
-            <!-- Items stream instantly -->
-        </div>
+        <div class="log-box" id="terminal-log-stream"></div>
     </div>
 
-    <!-- IRREVERSIBLE CRITICAL OVERRIDE PROTOCOL -->
     <div class="terminal-card destruct-card" id="module-destruct">
         <h2>SYS_MUTATION.CRITICAL_OVERRIDE</h2>
         <div style="color:#ff6666; font-size:0.8rem; margin-bottom:15px; line-height:1.4;">
-            WARNING: Triggering the sequence encrypts and stores an irreversible lockdown status array into the live cluster environment. Front-facing components will render completely locked out under Red Alert profiles.
+            WARNING: Triggering the sequence forces an override array into production. Storefront locks out via Red Alert layout profile.
         </div>
         <div class="form-group">
             <label style="color:#ff3333;">Type "CONFIRM" to validate system bypass</label>
@@ -131,7 +123,7 @@ body{background:#0a0e14;color:#00ff66;padding:40px 4%;background-image:radial-gr
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getFirestore, doc, getDoc, setDoc, collection, addDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, collection, addDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyD-KtI3u0FJXXTyA1XRX6kz6iSXO1gSmQo",
@@ -144,25 +136,23 @@ body{background:#0a0e14;color:#00ff66;padding:40px 4%;background-image:radial-gr
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-
   const heroRef = doc(db, "siteContent", "homepage");
 
-  // Main system configuration state monitoring
   onSnapshot(heroRef, (snapshot) => {
       if(snapshot.exists()) {
           const d = snapshot.data();
           if(d.lockdown === true) {
               triggerLocalLockdownUI();
           } else {
-              document.getElementById('inp-heroBadge').value = d.heroBadge || '';
-              document.getElementById('inp-heroTitle').value = d.heroTitle || '';
-              document.getElementById('inp-heroDesc').value = d.heroDesc || '';
-              document.getElementById('inp-heroImg').value = d.heroImg || '';
-              document.getElementById('inp-promoTitle').value = d.promoTitle || '';
-              document.getElementById('inp-promoDesc').value = d.promoDesc || '';
+              if (d.heroBadge !== undefined) document.getElementById('inp-heroBadge').value = d.heroBadge;
+              if (d.heroTitle !== undefined) document.getElementById('inp-heroTitle').value = d.heroTitle;
+              if (d.heroDesc !== undefined) document.getElementById('inp-heroDesc').value = d.heroDesc;
+              if (d.heroImg !== undefined) document.getElementById('inp-heroImg').value = d.heroImg;
+              if (d.promoTitle !== undefined) document.getElementById('inp-promoTitle').value = d.promoTitle;
+              if (d.promoDesc !== undefined) document.getElementById('inp-promoDesc').value = d.promoDesc;
           }
       }
-  });
+  }, (err) => { alert("Database permission error! Check Firestore Rules."); });
 
   function triggerLocalLockdownUI() {
       document.getElementById('sys-pulse').innerText = "SYS_STATUS: MUTATED_ERR";
@@ -182,7 +172,7 @@ body{background:#0a0e14;color:#00ff66;padding:40px 4%;background-image:radial-gr
       });
   }
 
-  // Update Core Components Text Blocks
+  // FIXED: { merge: true } stops forms from erasing each other's parameters
   document.getElementById('hero-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       await setDoc(heroRef, {
@@ -191,6 +181,7 @@ body{background:#0a0e14;color:#00ff66;padding:40px 4%;background-image:radial-gr
           heroDesc: document.getElementById('inp-heroDesc').value,
           heroImg: document.getElementById('inp-heroImg').value
       }, { merge: true });
+      alert("Hero Module Updated.");
   });
 
   document.getElementById('promo-form').addEventListener('submit', async (e) => {
@@ -199,9 +190,9 @@ body{background:#0a0e14;color:#00ff66;padding:40px 4%;background-image:radial-gr
           promoTitle: document.getElementById('inp-promoTitle').value,
           promoDesc: document.getElementById('inp-promoDesc').value
       }, { merge: true });
+      alert("Promo Module Updated.");
   });
 
-  // Inject Product Node
   document.getElementById('product-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       await addDoc(collection(db, "products"), {
@@ -214,7 +205,6 @@ body{background:#0a0e14;color:#00ff66;padding:40px 4%;background-image:radial-gr
       document.getElementById('product-form').reset();
   });
 
-  // Render Product Inventory Database Traces
   onSnapshot(collection(db, "products"), (snapshot) => {
       const logBox = document.getElementById('terminal-log-stream');
       logBox.innerHTML = '';
@@ -235,7 +225,6 @@ body{background:#0a0e14;color:#00ff66;padding:40px 4%;background-image:radial-gr
           logBox.appendChild(row);
       });
 
-      // Purge handler
       document.querySelectorAll('.del').forEach(btn => {
           btn.addEventListener('click', async (e) => {
               const id = e.target.getAttribute('data-id');
@@ -244,11 +233,10 @@ body{background:#0a0e14;color:#00ff66;padding:40px 4%;background-image:radial-gr
       });
   });
 
-  // Self Destruct Trigger Protocol
   document.getElementById('destruct-trigger-btn').addEventListener('click', async () => {
       const verificationValue = document.getElementById('destruct-verify').value;
       if(verificationValue === "CONFIRM") {
-          if(confirm("CRITICAL: You are about to initiate website self-destruct. This forces the storefront into immediate lockdown. Proceed?")) {
+          if(confirm("Force frontend lockdown?")) {
               await setDoc(heroRef, { lockdown: true }, { merge: true });
               triggerLocalLockdownUI();
           }
