@@ -69,7 +69,7 @@ footer{margin-top:100px;background:#0f172a;color:white;padding:80px 6% 30px;}
 .copyright{margin-top:50px;text-align:center;color:#94a3b8;border-top:1px solid rgba(255,255,255,.08);padding-top:20px;}
 @media(max-width:768px){.hero h1{font-size:2.6rem;}.hero-card{padding:60px 30px;}.header-container{flex-direction:column;}.search{width:100%;max-width:100%;}.actions{width:100%;justify-content:center;}}
 
-/* RED ALERT SYSTEM OVERLAY INTERFACE */
+/* EXPLICIT SHUTDOWN SYSTEM INTERFACE */
 #red-alert-screen{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:#050000;color:#ff3333;z-index:99999;font-family:'Fira Code',monospace;padding:10% 5%;align-items:center;justify-content:center;flex-direction:column;text-align:center;}
 .alert-header{font-size:4rem;font-weight:bold;letter-spacing:4px;animation:blink 1s infinite alternate;margin-bottom:20px;}
 .alert-sub{font-size:1.3rem;color:#ffaa00;margin-bottom:30px;max-width:700px;line-height:1.6;}
@@ -157,10 +157,12 @@ footer{margin-top:100px;background:#0f172a;color:white;padding:80px 6% 30px;}
   const firebaseConfig = {
     apiKey: "AIzaSyD-KtI3u0FJXXTyA1XRX6kz6iSXO1gSmQo",
     authDomain: "decoy-d0c3f.firebaseapp.com",
+    databaseURL: "https://decoy-d0c3f-default-rtdb.firebaseio.com",
     projectId: "decoy-d0c3f",
     storageBucket: "decoy-d0c3f.firebasestorage.app",
     messagingSenderId: "735739654588",
-    appId: "1:735739654588:web:09978f6bb3f268d1aa3bb9"
+    appId: "1:735739654588:web:d9e205dcc13cab82aa3bb9",
+    measurementId: "G-XEY6BG1871"
   };
 
   const app = initializeApp(firebaseConfig);
@@ -184,14 +186,14 @@ footer{margin-top:100px;background:#0f172a;color:white;padding:80px 6% 30px;}
           if(data.promoTitle) document.getElementById('promo-title').innerText = data.promoTitle;
           if(data.promoDesc) document.getElementById('promo-desc').innerText = data.promoDesc;
       }
-  }, (error) => { console.error("Firebase connection error: ", error); });
+  }, (error) => { console.error("Firebase Connection Error: ", error); });
 
   onSnapshot(collection(db, "products"), (snapshot) => {
       const container = document.getElementById('products-container');
       container.innerHTML = '';
       
       if (snapshot.empty) {
-          container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--muted); padding: 40px;">No products available right now. Use Terminal to inject.</div>';
+          container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--muted); padding: 40px;">No products available right now. Open Terminal to inject options.</div>';
           return;
       }
 
