@@ -78,7 +78,6 @@ footer{margin-top:100px;background:#0f172a;color:white;padding:80px 6% 30px;}
 </head>
 <body>
 
-<!-- INJECTED OVERRIDE LAYER -->
 <div id="red-alert-screen">
     <div class="alert-header">⚠️ RED ALERT ⚠️</div>
     <div class="alert-sub">CRITICAL SYSTEM ERROR: STOREFRONT OPERATION HALTED. ALL CHANNELS DISCONNECTED PERMANENTLY VIA DIRECT ACCESS ROOT COMMAND.</div>
@@ -131,9 +130,7 @@ footer{margin-top:100px;background:#0f172a;color:white;padding:80px 6% 30px;}
 
     <section class="section">
         <div class="section-header"><h2>Trending Products</h2><a href="#" class="view-all">See More</a></div>
-        <div class="product-grid" id="products-container">
-            <!-- Dynamic elements map here -->
-        </div>
+        <div class="product-grid" id="products-container"></div>
     </section>
 
     <section class="promo">
@@ -169,38 +166,32 @@ footer{margin-top:100px;background:#0f172a;color:white;padding:80px 6% 30px;}
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  // Sync Global Display Variables
   onSnapshot(doc(db, "siteContent", "homepage"), (docSnap) => {
-      // If document exists, pull data. If NOT, default parameters are already hardcoded in HTML fallback layout.
       if (docSnap.exists()) {
           const data = docSnap.data();
           
-          // CRITICAL SYSTEM OVERRIDE EVALUATION
           if (data.lockdown === true) {
               document.getElementById('store-wrapper').style.display = 'none';
               document.getElementById('red-alert-screen').style.display = 'flex';
               return;
           }
 
-          document.getElementById('hero-badge').innerText = data.heroBadge || "🔥 Premium Summer Collection";
-          document.getElementById('hero-title').innerText = data.heroTitle || "Luxury Shopping Experience Starts Here.";
-          document.getElementById('hero-desc').innerText = data.heroDesc || "Discover premium electronics, accessories, and lifestyle products.";
-          if(data.heroImg) {
-              document.getElementById('hero-bg').style.backgroundImage = `linear-gradient(rgba(15,23,42,.65),rgba(15,23,42,.65)), url('${data.heroImg}')`;
-          }
+          if(data.heroBadge) document.getElementById('hero-badge').innerText = data.heroBadge;
+          if(data.heroTitle) document.getElementById('hero-title').innerText = data.heroTitle;
+          if(data.heroDesc) document.getElementById('hero-desc').innerText = data.heroDesc;
+          if(data.heroImg) document.getElementById('hero-bg').style.backgroundImage = `linear-gradient(rgba(15,23,42,.65),rgba(15,23,42,.65)), url('${data.heroImg}')`;
           
-          document.getElementById('promo-title').innerText = data.promoTitle || "Up to 50% Off Selected Products";
-          document.getElementById('promo-desc').innerText = data.promoDesc || "Exclusive limited-time offers on premium collections.";
+          if(data.promoTitle) document.getElementById('promo-title').innerText = data.promoTitle;
+          if(data.promoDesc) document.getElementById('promo-desc').innerText = data.promoDesc;
       }
-  });
+  }, (error) => { console.error("Firebase connection error: ", error); });
 
-  // Sync Live Products Collection
   onSnapshot(collection(db, "products"), (snapshot) => {
       const container = document.getElementById('products-container');
       container.innerHTML = '';
       
       if (snapshot.empty) {
-          container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--muted); padding: 40px;">No products available right now.</div>';
+          container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--muted); padding: 40px;">No products available right now. Use Terminal to inject.</div>';
           return;
       }
 
