@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime Goods - E-Commerce Template</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #ffffff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 1rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2c3e50;
+            text-decoration: none;
+        }
+
+        .search-bar {
+            width: 40%;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 2rem;
+            outline: none;
+        }
+
+        .search-bar button {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            cursor: pointer;
+        }
+
+        .user-actions a {
+            color: #2c3e50;
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .main-nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        .main-nav a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .main-nav a:hover {
+            color: #3498db;
+        }
+
+        /* Hero Banner Styles */
+        .hero-banner {
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://via.placeholder.com/1920x600') center/cover no-repeat;
+            color: white;
+            padding: 6rem 5%;
+            text-align: center;
+        }
+
+        .hero-banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-banner p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.9rem 2rem;
+            border-radius: 0.3rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        /* Product Section Styles */
+        .product-section {
+            padding: 4rem 5%;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+        }
+
+        .btn-secondary {
+            color: #3498db;
+            border: 1px solid #3498db;
+        }
+
+        .btn-secondary:hover {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background-color: white;
+            border: 1px solid #eee;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            transition: box-shadow 0.3s;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .product-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .product-details {
+            padding: 1.5rem;
+        }
+
+        .product-name {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            text-decoration: none;
+            display: block;
+        }
+
+        .product-price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 1rem;
+        }
+
+        .product-rating {
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        .add-to-cart-btn {
+            width: 100%;
+            padding: 0.7rem;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 0.3rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .add-to-cart-btn:hover {
+            background-color: #27ae60;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 3rem 5%;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.7rem;
+        }
+
+        .footer-column a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column a:hover {
+            color: white;
+        }
+
+        .social-links a {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 1rem;
+            border-top: 1px solid #34495e;
+            color: #bdc3c7;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .search-bar {
+                width: 100%;
+            }
+
+            .main-nav ul {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .hero-banner h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="header-top">
+            <a href="#" class="logo">Prime Goods</a>
+            
+            <div class="search-bar">
+                <input type="text" placeholder="Search products...">
+                <button type="submit">&#128269;</button>
+            </div>
+            
+            <div class="user-actions">
+                <a href="#">Account</a>
+                <a href="#">Cart (0)</a>
+                <a href="#">Wishlist</a>
+            </div>
+        </div>
+        
+        <nav class="main-nav">
+            <ul>
+                <li><a href="#">Shop</a></li>
+                <li><a href="#">Categories</a></li>
+                <li><a href="#">New Arrivals</a></li>
+                <li><a href="#">Sales</a></li>
+                <li><a href="#">About Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Banner Section -->
+    <section class="hero-banner">
+        <h1>Limited Time Summer Sale</h1>
+        <p>Get up to 50% off on selected items – stock is limited, so shop now!</p>
+        <a href="#" class="btn btn-primary">Shop Sale</a>
+    </section>
+
+    <!-- Trending Products Section -->
+    <section class="product-section">
+        <div class="section-header">
+            <h2>Trending Products</h2>
+            <a href="#" class="btn btn-secondary">View All</a>
+        </div>
+        
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="https://via.placeholder.com/300x250" alt="Wireless Headphones" class="product-img">
+                <div class="product-details">
+                    <a href="#" class="product-name">Premium Wireless Headphones</a>
+                    <div class="product-price">$149.99</div>
+                    <div class="product-rating">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="https://via.placeholder.com/300x250" alt="Smart Watch" class="product-img">
+                <div class="product-details">
+                    <a href="#" class="product-name">Fitness Smart Watch</a>
+                    <div class="product-price">$89.99</div>
+                    <div class="product-rating">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="https://via.placeholder.com/300x250" alt="Portable Charger" class="product-img">
+                <div class="product-details">
+                    <a href="#" class="product-name">20000mAh Portable Charger</a>
+                    <div class="product-price">$39.99</div>
+                    <div class="product-rating">&#9733;&#9733;&#9733;&#9734;&#9734;</div>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="https://via.placeholder.com/300x250" alt="Bluetooth Speaker" class="product-img">
+                <div class="product-details">
+                    <a href="#" class="product-name">Waterproof Bluetooth Speaker</a>
+                    <div class="product-price">$59.99</div>
+                    <div class="product-rating">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- New Arrivals Section -->
+    <section class="product-section" style="background-color: #f8f9fa;">
+        <div class="section-header">
+            <h2>New Arrivals</h2>
+            <a href="#" class="btn btn-secondary">View All</a>
+        </div>
+        
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="https://via.placeholder.com/300x250" alt="Laptop Sleeve" class="product-img">
+                <div class="product-details">
+                    <a href="#" class="product-name">Leather Laptop Sleeve (15")</a>
+                    <div class="product-price">$49.99</div>
+                    <div class="product-rating">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="https://via.placeholder.com/300x250" alt="Phone Case" class="product-img">
+                <div class="product-details">
+                    <a href="#" class="product-name">Shockproof Phone Case</a>
+                    <div class="product-price">$24.99</div>
+                    <div class="product-rating">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="https://via.placeholder.com/300x250" alt="Desk Lamp" class="product-img">
+                <div class="product-details">
+                    <a href="#" class="product-name">LED Desk Lamp with USB Charger</a>
+                    <div class="product-price">$69.99</div>
+                    <div class="product-rating">&#9733;&#9733;&#9733;&#9734;&#9734;</div>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="https://via.placeholder.com/300x250" alt="Camera Tripod" class="product-img">
+                <div class="product-details">
+                    <a href="#" class="product-name">Adjustable Camera Tripod</a>
+                    <div class="product-price">$79.99</div>
+                    <div class="product-rating">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-column">
+                <h3>About Us</h3>
+                <ul>
+                    <li><a href="#">Our Story</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Sustainability</a></li>
+                    <li><a href="#">Press</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Shipping Policy</a></li>
+                    <li><a href="#">Returns & Refunds</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Shop</h3>
+                <ul>
+                    <li><a href="#">Electronics</a></li>
+                    <li><a href="#">Accessories</a></li>
+                    <li><a href="#">Home & Office</a></li>
+                    <li><a href="#">Sale Items</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Connect With Us</h3>
+                <div class="social-links">
+                    <a href="#">&#128242;</a>
+                    <a href="#">&#128279;</a>
+                    <a href="#">&#128250;</a>
+                    <a href="#">&#128187;</a>
+                </div>
+                <p style="margin-top: 1rem;">Sign up for our newsletter:</p>
+                <input type="email" placeholder="Your email" style="padding: 0.5rem; width: 100%; margin-top: 0.5rem; border-radius: 0.3rem; border: none;">
+                <button class="btn btn-primary" style="margin-top: 0.7rem; width: 100%;">Subscribe</button>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2024 Prime Goods. All rights reserved.
+        </div>
+    </footer>
+</body>
+</html>
