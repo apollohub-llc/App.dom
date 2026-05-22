@@ -6,7 +6,7 @@
 <title>ShopEasy | Modern Store</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght=300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 :root{
@@ -392,6 +392,30 @@ nav{
 </div>
 
 <script>
+// --- VERCEL SELF-DESTRUCT SECURITY STATUS CHECK ---
+async function checkSystemStatus() {
+  try {
+    const response = await fetch('/api/destruct');
+    const status = await response.json();
+    
+    if (status.destroyed === true) {
+      // Instantly clear the interface and drop a hard system block screen
+      document.documentElement.innerHTML = `
+        <body style="background: #0d0d0d; color: #ff5500; font-family: monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden;">
+          <div style="text-align: center; border: 2px solid #ff5500; padding: 40px; border-radius: 8px; box-shadow: 0 0 20px rgba(255, 85, 0, 0.2);">
+            <h1 style="font-size: 2rem; margin-bottom: 10px;">[ SYSTEM TERMINATED ]</h1>
+            <p style="color: #888; font-size: 1rem;">The directory endpoint apps/index.html is no longer active.</p>
+          </div>
+        </body>
+      `;
+      return false; // Stop executing the storefront entirely
+    }
+  } catch (err) {
+    console.error("Status synchronization failure:", err);
+  }
+  return true;
+}
+
 const products = [
 {
   id:1,
@@ -494,7 +518,15 @@ searchInput.addEventListener('input', (e)=>{
 
 });
 
-renderProducts(products);
+// Run execution immediately after verifying global system status
+async function init() {
+  const isAuthorized = await checkSystemStatus();
+  if (isAuthorized) {
+    renderProducts(products);
+  }
+}
+
+init();
 </script>
 
 </body>
