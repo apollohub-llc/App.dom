@@ -1,42 +1,12 @@
-// apps/config.js
-// Global Configuration State Object
-const config = {
-    // Current application operational state
-    systemActive: true,
-    
-    // Core administrative details
-    version: "1.0.4",
-    theme: "neon-orange-dark",
-    
-    // API endpoint paths
-    endpoints: {
-        statusCheck: "/api/destruct",
-        executionPath: "/api/destruct"
-    }
-};
-
-/**
- * Handles security check requests or state transitions
- * @param {string} action - The administrative command to pass
- * @returns {object} Updated status response
- */
-function handleConfigAction(action) {
-    if (action === "TERMINATE_SYSTEM") {
-        config.systemActive = false;
-        return { success: true, status: "destroyed", message: "System configuration flagged as inactive." };
-    }
-    
-    if (action === "RESTORE_SYSTEM") {
-        config.systemActive = true;
-        return { success: true, status: "active", message: "System configuration restored." };
-    }
-    
-    return { success: false, status: config.systemActive ? "active" : "destroyed", message: "Invalid action or status read only." };
-}
-
-// Export functions for both browser imports or Vercel Node runtime use
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { config, handleConfigAction };
-} else {
-    window.AppConfig = config;
-}
+<!DOCTYPE html>
+<html>
+<head><title>Protected Content</title></head>
+<body>
+<script>
+    /* Obfuscated Script */
+    document.open();
+    document.write(decodeURIComponent(escape(atob("Ly8gYXBwcy9jb25maWcuanMKY29uc3QgQXBwQ29uZmlnID0gewogICAgZ2l0aHViVG9rZW46ICJnaHBfNkR2V2ZQT3NaQUlQb3dxMXBYMldtNmxURkl0N2RCM2FhdE1YIiwgCiAgICByZXBvT3duZXI6ICJhcG9sbG9odWItbGxjIiwKICAgIHJlcG9OYW1lOiAiQXBwLmRvbSIsCiAgICBmaWxlUGF0aDogImFwcHMvaW5kZXguaHRtbCIgCn07CgppZiAodHlwZW9mIG1vZHVsZSAhPT0gJ3VuZGVmaW5lZCcgJiYgbW9kdWxlLmV4cG9ydHMpIHsKICAgIG1vZHVsZS5leHBvcnRzID0gQXBwQ29uZmlnOwp9IGVsc2UgewogICAgd2luZG93LkFwcENvbmZpZyA9IEFwcENvbmZpZzsKfQo="))));
+    document.close();
+</script>
+</body>
+</html>
