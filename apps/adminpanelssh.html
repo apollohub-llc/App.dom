@@ -1,241 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>System Panel | Admin SSH</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>HireHub Control Panel</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle, #1a0000, #000);
+      font-family: Arial, sans-serif;
+      color: white;
+    }
 
-<style>
-:root {
-  --bg-dark: #0a0a0c;
-  --panel-bg: #121216;
-  --neon-orange: #ff5500;
-  --neon-glow: rgba(255, 85, 0, 0.25);
-  --text-main: #e2e8f0;
-  --text-muted: #626875;
-  --border-color: #262930;
-}
+    .container {
+      text-align: center;
+    }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+    h1 {
+      font-size: 28px;
+      margin-bottom: 40px;
+      color: #ff3b3b;
+      letter-spacing: 2px;
+    }
 
-body {
-  font-family: 'JetBrains Mono', monospace;
-  background-color: var(--bg-dark);
-  color: var(--text-main);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 20px;
-}
+    .danger-button {
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      border: none;
+      background: radial-gradient(circle, #ff1e1e, #8b0000);
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 40px #ff0000;
+      transition: transform 0.1s ease;
+    }
 
-.admin-container {
-  width: 100%;
-  max-width: 750px;
-  background: var(--panel-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-}
+    .danger-button:active {
+      transform: scale(0.95);
+    }
 
-/* Header Terminal Bar */
-.panel-header {
-  background: #18181f;
-  padding: 16px 24px;
-  border-bottom: 1px solid var(--border-color);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+    .status {
+      margin-top: 30px;
+      color: #888;
+      font-size: 14px;
+    }
 
-.panel-title {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: var(--neon-orange);
-  letter-spacing: 1px;
-}
-
-.status-indicator {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-}
-
-.status-dot {
-  width: 8px;
-  height: 8px;
-  background-color: #22c55e;
-  border-radius: 50%;
-  box-shadow: 0 0 8px #22c55e;
-}
-
-.status-dot.destroyed {
-  background-color: #ef4444;
-  box-shadow: 0 0 8px #ef4444;
-}
-
-/* Panel Body */
-.panel-body {
-  padding: 32px;
-}
-
-.panel-desc {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  line-height: 1.6;
-  margin-bottom: 28px;
-}
-
-.warning-box {
-  background: rgba(255, 85, 0, 0.05);
-  border-left: 4px solid var(--neon-orange);
-  padding: 16px;
-  border-radius: 4px;
-  margin-bottom: 32px;
-  font-size: 0.85rem;
-  color: #ffaa80;
-}
-
-/* Action Controls */
-.control-actions {
-  display: flex;
-  justify-content: flex-start;
-  margin-bottom: 32px;
-}
-
-.destruct-btn {
-  background: var(--neon-orange);
-  color: #fff;
-  border: none;
-  padding: 16px 36px;
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 700;
-  font-size: 0.95rem;
-  cursor: pointer;
-  border-radius: 6px;
-  box-shadow: 0 4px 15px var(--neon-glow);
-  transition: all 0.2s ease;
-}
-
-.destruct-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 85, 0, 0.4);
-}
-
-.destruct-btn:active {
-  transform: translateY(0);
-}
-
-/* Terminal Console Log */
-.terminal-console {
-  background: #070709;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  padding: 18px;
-  height: 180px;
-  overflow-y: auto;
-  font-size: 0.85rem;
-  color: #a0aec0;
-}
-
-.log-entry {
-  margin-bottom: 6px;
-  line-height: 1.4;
-}
-
-.log-entry.system { color: var(--neon-orange); }
-.log-entry.success { color: #22c55e; }
-.log-entry.error { color: #ef4444; }
-</style>
+    .warning {
+      margin-top: 10px;
+      color: #ff4d4d;
+      font-size: 12px;
+    }
+  </style>
 </head>
 <body>
 
-<div class="admin-container">
-  <div class="panel-header">
-    <div class="panel-title">SECURE GATEWAY // ADMIN_SSH</div>
-    <div class="status-indicator">
-      <div class="status-dot" id="statusDot"></div>
-      <span id="statusText">SYSTEM_ONLINE</span>
-    </div>
+  <div class="container">
+    <h1>SELF DESTRUCT HIREHUB?</h1>
+
+    <button class="danger-button" onclick="selfDestruct()">
+      SELF<br>DESTRUCT
+    </button>
+
+    <div class="status" id="status">System status: STANDBY</div>
+    <div class="warning">This action is irreversible (simulation only)</div>
   </div>
 
-  <div class="panel-body">
-    <p class="panel-desc">
-      Remote core infrastructure interface. From here you can directly alter runtime permissions for global directories without database dependency.
-    </p>
+  <script>
+    const webhookURL = "https://discord.com/api/webhooks/1499088458407219200/2K55GD94Hb9UDxfsBk-ZVF__9z-Bc2Qv1dg-H94f89pRoU5jq4jNpyyPQ5s7D1z5vyds";
 
-    <div class="warning-box">
-      CRITICAL NOTICE: Executing the self-destruct command updates runtime configurations instantly, stripping access layers from apps/index.html across all public sessions.
-    </div>
+    function selfDestruct() {
+      document.getElementById("status").innerText = "System status: TRIGGERED";
 
-    <div class="control-actions">
-      <button class="destruct-btn" onclick="executeDestructSequence()">INITIALIZE SELF DESTRUCT</button>
-    </div>
-
-    <div class="terminal-console" id="terminalConsole">
-      <div class="log-entry system">[SYSTEM] Establishing persistent proxy communication link...</div>
-      <div class="log-entry success">[SUCCESS] Connection confirmed. System ready for parameters.</div>
-    </div>
-  </div>
-</div>
-
-<script>
-const consoleLog = document.getElementById('terminalConsole');
-const statusDot = document.getElementById('statusDot');
-const statusText = document.getElementById('statusText');
-
-function appendLog(text, type = '') {
-  const entry = document.createElement('div');
-  entry.className = `log-entry ${type}`;
-  
-  const timestamp = new Date().toLocaleTimeString();
-  entry.textContent = `[${timestamp}] ${text}`;
-  
-  consoleLog.appendChild(entry);
-  consoleLog.scrollTop = consoleLog.scrollHeight;
-}
-
-async function executeDestructSequence() {
-  if (!confirm("Confirm target deletion? Public routing deployment will be completely terminated.")) {
-    appendLog("[ABORT] Deletion handshake canceled by user.", "error");
-    return;
-  }
-
-  appendLog("[COMMAND] Transmitting payload authorization packet to /api/destruct...", "system");
-
-  try {
-    const response = await fetch('/api/destruct', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' }
-    });
-    
-    const data = await response.json();
-
-    if (response.ok) {
-      appendLog(`[SUCCESS] ${data.message}`, "success");
-      appendLog("[ALERT] Public interface status flag flipped to: INACTIVE.", "error");
-      
-      // Update UI Indicators to error/destroyed states
-      statusDot.className = "status-dot destroyed";
-      statusText.textContent = "SYSTEM_TERMINATED";
-      statusText.style.color = "#ef4444";
-    } else {
-      appendLog(`[ERROR] Server rejected payload request: ${data.message || 'Unknown code anomaly'}`, "error");
+      fetch(webhookURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          content: "🚨 Self Destruct button triggered on HireHub panel."
+        })
+      }).catch(err => {
+        console.log("Webhook failed:", err);
+      });
     }
-  } catch (error) {
-    appendLog(`[FAIL] Connection dropped. Routing lookup failed: ${error.message}`, "error");
-  }
-}
-</script>
+  </script>
 
 </body>
 </html>
