@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Safelookup Technologies | IP Address Lookup</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #f5f7fa;
+      color: #333;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+    .logo-brand {
+      color: #e02020;
+    }
+    .logo-tech {
+      color: #1a73e8;
+    }
+    p.description {
+      margin-top: 5px;
+      font-size: 16px;
+      color: #555;
+    }
+    .input-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    input {
+      flex-grow: 1;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      background: #1a73e8;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0d62c9;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 6px;
+      background: white;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.12);
+    }
+    .result table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .result th,
+    .result td {
+      padding: 9px 12px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+    }
+    .result th {
+      background: #f1f6ff;
+      font-weight: bold;
+      color: #222;
+    }
+    .result code {
+      background: #f8f9fa;
+      color: #111;
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-size: 14px;
+    }
+    .error {
+      color: #d93025;
+      font-weight: bold;
+    }
+    footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 0.9em;
+      color: #666;
+    }
+    footer strong {
+      color: #1a73e8;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><span class="logo-brand">Safe</span>lookup<span class="logo-tech"> Technologies</span></h1>
+    <p class="description">Check the location and safety profile of any IP address.</p>
+  </header>
+
+  <div class="input-group">
+    <input
+      type="text"
+      id="ipInput"
+      placeholder="Enter an IP address (e.g. 8.8.8.8) or leave blank to check your own IP"
+    />
+    <button onclick="lookupIP()">Lookup</button>
+  </div>
+
+  <div id="result"></div>
+
+  <script>
+    async function lookupIP() {
+      const ip = document.getElementById("ipInput").value.trim();
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = "<p>Looking up IP info...</p>";
+
+      // Uses IP-API (no API key required)
+      const url = `http://ip-api.com/json/${ip}`;
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (data.status === "fail") {
+          resultDiv.innerHTML = `<p class="error">Lookup failed: ${data.message}</p>`;
+          return;
+        }
+
+        // Build list of fields (about 15–20)
+        let fields = [
+          { key: "IP Address", value: data.query },
+          { key: "Status", value: data.status },
+          { key: "Country", value: data.country },
+          { key: "Country Code", value: data.countryCode },
+          { key: "Region", value: data.region },
+          { key: "Region Name", value: data.regionName },
+          { key: "City", value: data.city },
+          { key: "ZIP / Postal Code", value: data.zip },
+          { key: "Latitude", value: data.lat },
+          { key: "Longitude", value: data.lon },
+          { key: "Timezone", value: data.timezone },
+          { key: "ISP", value: data.isp },
+          { key: "Organization", value: data.org },
+          { key: "AS Number", value: data.as },
+          { key: "AS Name", value: data.asname },
+          { key: "Mobile Network", value: data.mobile ? "Yes" : "No" },
+          { key: "Proxy / VPN", value: data.proxy ? "Yes" : "No" },
+          { key: "Hosting / Data Center", value: data.hosting ? "Yes" : "No" },
+        ];
+
+        // Only show fields that actually exist
+        let rows = fields
+          .map(f => f.value !== undefined && f.value !== ""
+            ? `<tr><th>${f.key}</th><td><code>${f.value}</code></td></tr>` : "")
+          .join("");
+
+        resultDiv.innerHTML = `
+          <div class="result">
+            <h2>IP Information</h2>
+            <table>${rows}</table>
+          </div>
+        `;
+      } catch (err) {
+        resultDiv.innerHTML = `<p class="error">Error: ${err.message}</p>`;
+      }
+    }
+
+    // Auto-lookup user's own IP on page load
+    window.onload = () => {
+      lookupIP();
+    };
+  </script>
+
+  <footer>
+    <p>Powered by <strong>Safelookup Technologies</strong></p>
+    <p>Free IP lookup & geolocation service. No API key required.</p>
+  </footer>
+</body>
+</html>
