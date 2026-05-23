@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>URL Lookup by SFT - Safelookup Technologies</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 50%, #0d0d2b 100%);
@@ -28,143 +24,54 @@
             max-width: 600px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+        .logo { text-align: center; margin-bottom: 30px; }
         .logo h1 {
-            font-size: 28px;
-            font-weight: 700;
+            font-size: 28px; font-weight: 700;
             background: linear-gradient(90deg, #6366f1, #8b5cf6, #a855f7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        .logo .sft {
-            font-size: 14px;
-            color: #8888aa;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-        }
-        .input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
+        .logo .sft { font-size: 14px; color: #8888aa; letter-spacing: 3px; text-transform: uppercase; }
+        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
         input {
-            flex: 1;
-            padding: 14px 18px;
-            border: 2px solid rgba(100, 100, 255, 0.3);
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
-            font-size: 16px;
-            outline: none;
-            transition: all 0.3s;
+            flex: 1; padding: 14px 18px;
+            border: 2px solid rgba(100, 100, 255, 0.3); border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 16px;
+            outline: none; transition: all 0.3s;
         }
-        input:focus {
-            border-color: #8b5cf6;
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
-        }
-        input::placeholder {
-            color: #666;
-        }
+        input:focus { border-color: #8b5cf6; box-shadow: 0 0 20px rgba(139, 92, 246, 0.2); }
+        input::placeholder { color: #666; }
         button {
-            padding: 14px 28px;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            border: none;
-            border-radius: 12px;
-            color: #fff;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
+            padding: 14px 28px; background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border: none; border-radius: 12px; color: #fff; font-size: 16px;
+            font-weight: 600; cursor: pointer; transition: all 0.3s;
         }
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
-        }
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
         .result {
-            display: none;
-            padding: 20px;
-            border-radius: 12px;
-            margin-top: 20px;
+            display: none; padding: 20px; border-radius: 12px; margin-top: 20px;
             animation: fadeIn 0.4s ease;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .result.safe {
-            display: block;
-            background: rgba(34, 197, 94, 0.1);
-            border: 1px solid rgba(34, 197, 94, 0.3);
-        }
-        .result.danger {
-            display: block;
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-        }
-        .result.unknown {
-            display: block;
-            background: rgba(251, 191, 36, 0.1);
-            border: 1px solid rgba(251, 191, 36, 0.3);
-        }
-        .result-icon {
-            font-size: 40px;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        .result-title {
-            font-size: 20px;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 8px;
-        }
-        .result-detail {
-            text-align: center;
-            font-size: 14px;
-            color: #aaa;
-            word-break: break-all;
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .result.safe { display: block; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); }
+        .result.danger { display: block; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .result.unknown { display: block; background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); }
+        .result-icon { font-size: 40px; text-align: center; margin-bottom: 10px; }
+        .result-title { font-size: 20px; font-weight: 700; text-align: center; margin-bottom: 8px; }
+        .result-detail { text-align: center; font-size: 14px; color: #aaa; word-break: break-all; }
         .safe .result-title { color: #22c55e; }
         .danger .result-title { color: #ef4444; }
         .unknown .result-title { color: #fbbf24; }
-        .powered-by {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 12px;
-            color: #555;
-        }
-        .powered-by span {
-            color: #8b5cf6;
-        }
-        .loading {
-            display: none;
-            text-align: center;
-            margin-top: 20px;
-        }
-        .loading.active {
-            display: block;
-        }
+        .powered-by { text-align: center; margin-top: 30px; font-size: 12px; color: #555; }
+        .powered-by span { color: #8b5cf6; }
+        .loading { display: none; text-align: center; margin-top: 20px; }
+        .loading.active { display: block; }
         .spinner {
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            border: 3px solid rgba(139, 92, 246, 0.3);
-            border-top-color: #8b5cf6;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+            display: inline-block; width: 30px; height: 30px;
+            border: 3px solid rgba(139, 92, 246, 0.3); border-top-color: #8b5cf6;
+            border-radius: 50%; animation: spin 0.8s linear infinite;
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -178,7 +85,7 @@
             <input 
                 type="text" 
                 id="urlInput" 
-                placeholder="Enter URL to scan (e.g., example.com/phishing)"
+                placeholder="Enter URL to scan (e.g., example.com/phishing)" 
                 autocomplete="off"
             >
             <button id="scanBtn" onclick="scanURL()">Scan</button>
@@ -186,7 +93,7 @@
 
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p style="margin-top: 10px; color: #888;">Checking PhishTank database...</p>
+            <p style="margin-top: 10px; color: #888;">Checking URLhaus database...</p>
         </div>
 
         <div class="result" id="result">
@@ -196,7 +103,7 @@
         </div>
 
         <div class="powered-by">
-            Powered by <span>PhishTank</span> | Safelookup Technologies © 2025
+            Powered by <span>URLhaus</span> | Safelookup Technologies © 2025
         </div>
     </div>
 
@@ -214,11 +121,6 @@
                 return;
             }
 
-            // Add protocol if missing
-            if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                url = 'https://' + url;
-            }
-
             // Reset UI
             result.style.display = 'none';
             loading.classList.add('active');
@@ -226,53 +128,61 @@
             btn.textContent = 'Scanning...';
 
             try {
-                // Encode URL for PhishTank API
-                const encodedURL = encodeURIComponent(url);
+                /*
+                  We use a public CORS proxy because the URLhaus API does not
+                  set CORS headers for browser requests. This is a standard 
+                  workaround for free and open APIs.
+                */
+                const proxyBase = 'https://api.allorigins.win/raw?url=';
+                const apiEndpoint = 'https://urlhaus-api.abuse.ch/v1/url/';
+                const targetApiUrl = proxyBase + encodeURIComponent(apiEndpoint);
                 
-                // Using a CORS proxy to access PhishTank (their API doesn't set CORS headers)
-                // This proxy is free and open, no key required
-                const apiURL = `https://api.allorigins.win/raw?url=${encodeURIComponent(
-                    `https://checkurl.phishtank.com/checkurl/index.php?url=${encodedURL}&format=json&app_key=`
-                )}`;
+                const formData = new FormData();
+                formData.append('url', url);
 
-                const response = await fetch(apiURL);
+                const response = await fetch(targetApiUrl, {
+                    method: 'POST',
+                    body: formData
+                });
                 const data = await response.json();
 
-                // Parse PhishTank response
-                const inDatabase = data.results && data.results.in_database;
-                const phishDetailPage = data.results && data.results.phish_detail_page;
-                
-                if (inDatabase === true) {
-                    // URL is in PhishTank database - VERIFIED PHISH
-                    result.className = 'result danger';
-                    document.getElementById('resultIcon').textContent = '🚨';
-                    document.getElementById('resultTitle').textContent = '⚠️ Phishing Site Detected!';
-                    document.getElementById('resultDetail').innerHTML = `
-                        This URL is listed in the PhishTank database as a known phishing site.<br>
-                        <strong>${url}</strong><br><br>
-                        <a href="${phishDetailPage || 'https://phishtank.org/'}" 
-                           target="_blank" 
-                           style="color: #ef4444; text-decoration: underline;">
-                            View report on PhishTank →
-                        </a>
-                    `;
-                } else if (inDatabase === false) {
-                    // URL not in database
+                if (data.query_status === 'no_results') {
+                    // URL not found in malicious database
                     result.className = 'result safe';
                     document.getElementById('resultIcon').textContent = '✅';
-                    document.getElementById('resultTitle').textContent = 'URL Not Found in Database';
+                    document.getElementById('resultTitle').textContent = 'No Threats Found';
                     document.getElementById('resultDetail').innerHTML = `
                         <strong>${url}</strong><br>
-                        This URL was not found in the PhishTank phishing database.<br>
-                        <em style="color: #888;">Note: This does not guarantee the site is safe. Always exercise caution.</em>
+                        URLhaus has no record of this URL. It is likely safe.<br>
+                        <em style="color: #888;">Always exercise caution with unknown links.</em>
+                    `;
+                } else if (data.query_status === 'ok' || data.url_status) {
+                    // URL is in the database → MALICIOUS
+                    const threat = data.threat || 'malware_download';
+                    const tags = data.tags ? data.tags.join(', ') : 'none';
+                    const dateAdded = data.date_added ? data.date_added.split(' ')[0] : 'unknown date';
+                    
+                    result.className = 'result danger';
+                    document.getElementById('resultIcon').textContent = '🚨';
+                    document.getElementById('resultTitle').textContent = '⚠️ Malicious Site Detected!';
+                    document.getElementById('resultDetail').innerHTML = `
+                        <strong>${url}</strong> is in the URLhaus database of malicious websites.<br><br>
+                        <strong>Threat Type:</strong> ${threat}<br>
+                        <strong>Tags:</strong> ${tags}<br>
+                        <strong>First Reported:</strong> ${dateAdded}<br><br>
+                        <a href="https://urlhaus.abuse.ch/url/${data.id || ''}" 
+                           target="_blank" 
+                           style="color: #ef4444; text-decoration: underline;">
+                            View full report on URLhaus →
+                        </a>
                     `;
                 } else {
-                    // Unknown or error response
+                    // The API query itself failed unexpectedly
                     result.className = 'result unknown';
                     document.getElementById('resultIcon').textContent = '❓';
-                    document.getElementById('resultTitle').textContent = 'Unable to Verify';
+                    document.getElementById('resultTitle').textContent = 'Lookup Failed';
                     document.getElementById('resultDetail').textContent = 
-                        'Could not determine the status of this URL. It may be malformed or the service is temporarily unavailable.';
+                        'The URLhaus service returned an unexpected response. Please try again later.';
                 }
                 
                 result.style.display = 'block';
@@ -282,9 +192,9 @@
                 document.getElementById('resultIcon').textContent = '⚠️';
                 document.getElementById('resultTitle').textContent = 'Connection Error';
                 document.getElementById('resultDetail').textContent = 
-                    'Unable to reach the PhishTank service. Please check your internet connection and try again.';
+                    'Unable to reach the URLhaus service. Please check your connection and try again.';
                 result.style.display = 'block';
-                console.error('Error:', error);
+                console.error('Fetch error:', error);
             } finally {
                 loading.classList.remove('active');
                 btn.disabled = false;
@@ -292,7 +202,7 @@
             }
         }
 
-        // Allow Enter key to submit
+        // Allow scanning by pressing the Enter key
         document.getElementById('urlInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 scanURL();
