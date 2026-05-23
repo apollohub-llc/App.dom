@@ -3,223 +3,575 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>URL Lookup by SFT - Safelookup Technologies</title>
+    <title>Safelookup Technologies - Threat Intelligence Platform</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 50%, #0d0d2b 100%);
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             color: #e0e0e0;
         }
-        .container {
-            background: rgba(20, 20, 40, 0.95);
-            border: 1px solid rgba(100, 100, 255, 0.2);
-            border-radius: 20px;
-            padding: 40px;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+
+        /* Header */
+        .header {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        .logo { text-align: center; margin-bottom: 30px; }
-        .logo h1 {
-            font-size: 28px; font-weight: 700;
-            background: linear-gradient(90deg, #6366f1, #8b5cf6, #a855f7);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00ffff, #0066ff);
+            -webkit-background-clip: text;
             background-clip: text;
+            color: transparent;
         }
-        .logo .sft { font-size: 14px; color: #8888aa; letter-spacing: 3px; text-transform: uppercase; }
-        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
-        input {
-            flex: 1; padding: 14px 18px;
-            border: 2px solid rgba(100, 100, 255, 0.3); border-radius: 12px;
-            background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 16px;
-            outline: none; transition: all 0.3s;
+
+        .logo-sub {
+            font-size: 0.7rem;
+            color: #888;
+            letter-spacing: 2px;
         }
-        input:focus { border-color: #8b5cf6; box-shadow: 0 0 20px rgba(139, 92, 246, 0.2); }
-        input::placeholder { color: #666; }
-        button {
-            padding: 14px 28px; background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            border: none; border-radius: 12px; color: #fff; font-size: 16px;
-            font-weight: 600; cursor: pointer; transition: all 0.3s;
+
+        .status-badge {
+            background: rgba(0, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(0, 255, 255, 0.3);
         }
-        button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4); }
-        button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
-        .result {
-            display: none; padding: 20px; border-radius: 12px; margin-top: 20px;
-            animation: fadeIn 0.4s ease;
+
+        .status-badge::before {
+            content: "●";
+            color: #00ff00;
+            margin-right: 0.5rem;
+            animation: pulse 2s infinite;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .result.safe { display: block; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); }
-        .result.danger { display: block; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); }
-        .result.unknown { display: block; background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); }
-        .result-icon { font-size: 40px; text-align: center; margin-bottom: 10px; }
-        .result-title { font-size: 20px; font-weight: 700; text-align: center; margin-bottom: 8px; }
-        .result-detail { text-align: center; font-size: 14px; color: #aaa; word-break: break-all; }
-        .safe .result-title { color: #22c55e; }
-        .danger .result-title { color: #ef4444; }
-        .unknown .result-title { color: #fbbf24; }
-        .powered-by { text-align: center; margin-top: 30px; font-size: 12px; color: #555; }
-        .powered-by span { color: #8b5cf6; }
-        .loading { display: none; text-align: center; margin-top: 20px; }
-        .loading.active { display: block; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #aaa;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            background: rgba(0, 255, 255, 0.1);
+            border-color: rgba(0, 255, 255, 0.3);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #00ffff20, #0066ff20);
+            border-color: #00ffff;
+            color: #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+
+        /* Search Box */
+        .search-box {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 1rem 1.2rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #00ffff;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+        }
+
+        .input-group input::placeholder {
+            color: #666;
+        }
+
+        .search-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #00ffff, #0066ff);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .search-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Results Section */
+        .results {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .results h3 {
+            margin-bottom: 1rem;
+            color: #00ffff;
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: #aaa;
+        }
+
+        .result-value {
+            color: #fff;
+            word-break: break-all;
+        }
+
+        .threat-score {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .threat-high {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff4444;
+        }
+
+        .threat-medium {
+            background: rgba(255, 165, 0, 0.2);
+            color: #ffaa44;
+        }
+
+        .threat-low {
+            background: rgba(0, 255, 0, 0.1);
+            color: #44ff44;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+        }
+
         .spinner {
-            display: inline-block; width: 30px; height: 30px;
-            border: 3px solid rgba(139, 92, 246, 0.3); border-top-color: #8b5cf6;
-            border-radius: 50%; animation: spin 0.8s linear infinite;
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(0, 255, 255, 0.2);
+            border-top-color: #00ffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            color: #ff6666;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 2rem;
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .input-group {
+                flex-direction: column;
+            }
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+            .logo-text {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Example suggestions */
+        .examples {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .example-chip {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .example-chip:hover {
+            background: rgba(0, 255, 255, 0.2);
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">
-            <h1>URL Lookup</h1>
-            <p class="sft">by Safelookup Technologies</p>
-        </div>
-        
-        <div class="input-group">
-            <input 
-                type="text" 
-                id="urlInput" 
-                placeholder="Enter URL to scan (e.g., example.com)" 
-                autocomplete="off"
-            >
-            <button id="scanBtn" onclick="scanURL()">Scan</button>
-        </div>
-
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p style="margin-top: 10px; color: #888;">Checking Google Safe Browsing...</p>
-        </div>
-
-        <div class="result" id="result">
-            <div class="result-icon" id="resultIcon"></div>
-            <div class="result-title" id="resultTitle"></div>
-            <div class="result-detail" id="resultDetail"></div>
-        </div>
-
-        <div class="powered-by">
-            Powered by <span>Google Safe Browsing</span> | Safelookup Technologies © 2025
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">🛡️</span>
+                <div>
+                    <div class="logo-text">Safelookup Technologies</div>
+                    <div class="logo-sub">Threat Intelligence Platform</div>
+                </div>
+            </div>
+            <div class="status-badge">AlienVault OTX • No API Key Required</div>
         </div>
     </div>
 
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-btn active" data-type="ip">🌐 IP Address</button>
+            <button class="tab-btn" data-type="domain">🏠 Domain</button>
+            <button class="tab-btn" data-type="url">🔗 URL</button>
+        </div>
+
+        <div class="search-section">
+            <div class="search-box">
+                <div class="input-group">
+                    <input type="text" id="searchInput" placeholder="Enter IP, domain, or URL to lookup...">
+                    <button class="search-btn" id="searchBtn">🔍 Lookup</button>
+                </div>
+                <div class="examples" id="examples"></div>
+            </div>
+
+            <div class="results" id="results">
+                <h3>📊 Lookup Results</h3>
+                <div id="resultsContent">
+                    <div style="text-align: center; padding: 2rem; color: #666;">
+                        Enter an IP, domain, or URL above to start
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Safelookup Technologies — Powered by AlienVault OTX Open Threat Exchange</p>
+        <p style="margin-top: 0.5rem;">Checks IPs, Domains & URLs for threat intelligence and reputation data</p>
+    </div>
+
     <script>
-        const API_KEY = 'AIzaSyAfF2J7FH-X_WXZhBDWRP7Ni-UwHFyaI2k';
-        
-        async function scanURL() {
-            const input = document.getElementById('urlInput');
-            const btn = document.getElementById('scanBtn');
-            const loading = document.getElementById('loading');
-            const result = document.getElementById('result');
-            const resultIcon = document.getElementById('resultIcon');
-            const resultTitle = document.getElementById('resultTitle');
-            const resultDetail = document.getElementById('resultDetail');
-            
-            let url = input.value.trim();
-            
-            if (!url) {
-                alert('Please enter a URL to scan.');
+        let currentType = 'ip';
+        let currentSearch = '';
+
+        const examples = {
+            ip: ['8.8.8.8', '1.1.1.1', '185.130.5.253', '45.227.254.8'],
+            domain: ['google.com', 'facebook.com', 'malware-test.com', 'dns-shop.ru'],
+            url: ['https://google.com', 'https://virustotal.com', 'https://example.com/exploit', 'https://malware.test']
+        };
+
+        function updateExamples() {
+            const container = document.getElementById('examples');
+            const exampleList = examples[currentType];
+            container.innerHTML = exampleList.map(example => 
+                `<span class="example-chip" onclick="setExample('${example}')">${example}</span>`
+            ).join('');
+        }
+
+        function setExample(value) {
+            document.getElementById('searchInput').value = value;
+            performLookup();
+        }
+
+        async function performLookup() {
+            const input = document.getElementById('searchInput').value.trim();
+            if (!input) {
+                showError('Please enter a value to lookup');
                 return;
             }
 
-            if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                url = 'https://' + url;
-            }
-
-            result.style.display = 'none';
-            loading.classList.add('active');
-            btn.disabled = true;
-            btn.textContent = 'Scanning...';
+            currentSearch = input;
+            showLoading();
 
             try {
-                const apiUrl = `https://safebrowsing.googleapis.com/v4/threatMatches:find?key=${API_KEY}`;
+                let apiUrl = '';
+                if (currentType === 'ip') {
+                    apiUrl = `https://otx.alienvault.com/api/v1/indicators/IPv4/${input}/general`;
+                } else if (currentType === 'domain') {
+                    apiUrl = `https://otx.alienvault.com/api/v1/indicators/domain/${input}/general`;
+                } else {
+                    apiUrl = `https://otx.alienvault.com/api/v1/indicators/url/${encodeURIComponent(input)}/general`;
+                }
+
+                const response = await fetch(apiUrl);
                 
-                const requestBody = {
-                    client: {
-                        clientId: "safelookup-technologies",
-                        clientVersion: "1.0.0"
-                    },
-                    threatInfo: {
-                        threatTypes: [
-                            "MALWARE",
-                            "SOCIAL_ENGINEERING",
-                            "UNWANTED_SOFTWARE",
-                            "POTENTIALLY_HARMFUL_APPLICATION"
-                        ],
-                        platformTypes: ["ANY_PLATFORM"],
-                        threatEntryTypes: ["URL"],
-                        threatEntries: [
-                            { url: url }
-                        ]
-                    }
-                };
-
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(requestBody)
-                });
-
                 if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error?.message || `HTTP ${response.status}`);
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
 
                 const data = await response.json();
-
-                if (data.matches && data.matches.length > 0) {
-                    const threats = data.matches.map(m => m.threatType.replace(/_/g, ' ').toLowerCase()).join(', ');
-                    
-                    result.className = 'result danger';
-                    resultIcon.textContent = '🚨';
-                    resultTitle.textContent = '⚠️ Dangerous Site Detected!';
-                    resultDetail.innerHTML = `
-                        <strong>${url}</strong><br>
-                        Google Safe Browsing has flagged this URL.<br><br>
-                        <strong>Threat Type(s):</strong> ${threats}<br><br>
-                        <em style="color: #ef4444;">Do not visit this site. It may steal your information or infect your device.</em>
-                    `;
-                } else {
-                    result.className = 'result safe';
-                    resultIcon.textContent = '✅';
-                    resultTitle.textContent = 'No Threats Found';
-                    resultDetail.innerHTML = `
-                        <strong>${url}</strong><br>
-                        Google Safe Browsing has no record of threats for this URL.<br>
-                        <em style="color: #888;">This site appears to be safe based on current data.</em>
-                    `;
-                }
-                
-                result.style.display = 'block';
-                
+                displayResults(data);
             } catch (error) {
-                console.error('Error:', error);
-                result.className = 'result unknown';
-                resultIcon.textContent = '⚠️';
-                resultTitle.textContent = 'Service Error';
-                resultDetail.innerHTML = `
-                    Could not complete the scan.<br><br>
-                    <small style="color: #666;">${error.message}</small>
-                `;
-                result.style.display = 'block';
-            } finally {
-                loading.classList.remove('active');
-                btn.disabled = false;
-                btn.textContent = 'Scan';
+                showError(`Lookup failed: ${error.message}. Note: Some free endpoints may have rate limits.`);
             }
         }
 
-        document.getElementById('urlInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                scanURL();
+        function showLoading() {
+            const container = document.getElementById('resultsContent');
+            container.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Querying OTX Threat Intelligence...</p>
+                </div>
+            `;
+        }
+
+        function showError(message) {
+            const container = document.getElementById('resultsContent');
+            container.innerHTML = `<div class="error">⚠️ ${message}</div>`;
+        }
+
+        function displayResults(data) {
+            const container = document.getElementById('resultsContent');
+            
+            // Calculate threat score
+            let pulseCount = data.pulse_info?.pulses?.length || 0;
+            let threatLevel = 'low';
+            if (pulseCount >= 10) threatLevel = 'high';
+            else if (pulseCount >= 3) threatLevel = 'medium';
+            
+            let html = `
+                <div class="result-card">
+                    <div class="result-item">
+                        <span class="result-label">Indicator</span>
+                        <span class="result-value">${data.indicator || currentSearch}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Type</span>
+                        <span class="result-value">${data.type?.toUpperCase() || currentType.toUpperCase()}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Threat Score</span>
+                        <span class="result-value">
+                            <span class="threat-score threat-${threatLevel}">
+                                ${pulseCount} threat pulse${pulseCount !== 1 ? 's' : ''}
+                            </span>
+                        </span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Reputation</span>
+                        <span class="result-value">
+                            ${pulseCount === 0 ? '✅ Clean / No threats found' : 
+                              pulseCount < 3 ? '⚠️ Suspicious - Limited activity' :
+                              '🔴 Malicious - Multiple threat reports'}
+                        </span>
+                    </div>
+            `;
+
+            if (data.asn) {
+                html += `
+                    <div class="result-item">
+                        <span class="result-label">ASN</span>
+                        <span class="result-value">${data.asn}</span>
+                    </div>
+                `;
             }
+
+            if (data.country_code) {
+                html += `
+                    <div class="result-item">
+                        <span class="result-label">Country</span>
+                        <span class="result-value">${data.country_code} ${data.country_name ? `(${data.country_name})` : ''}</span>
+                    </div>
+                `;
+            }
+
+            if (data.city) {
+                html += `
+                    <div class="result-item">
+                        <span class="result-label">Location</span>
+                        <span class="result-value">${data.city}, ${data.region}</span>
+                    </div>
+                `;
+            }
+
+            html += `</div>`;
+
+            // Show related pulses (threat reports)
+            const pulses = data.pulse_info?.pulses || [];
+            if (pulses.length > 0) {
+                html += `<div class="result-card"><h4 style="color: #ffaa44; margin-bottom: 1rem;">📋 Threat Reports (${pulses.length})</h4>`;
+                pulses.slice(0, 5).forEach(pulse => {
+                    html += `
+                        <div class="result-item">
+                            <span class="result-label">${pulse.name || 'Unnamed'}</span>
+                            <span class="result-value">${pulse.description ? pulse.description.substring(0, 100) : 'No description'}</span>
+                        </div>
+                    `;
+                });
+                if (pulses.length > 5) {
+                    html += `<div class="result-item"><span class="result-label">+ ${pulses.length - 5} more</span></div>`;
+                }
+                html += `</div>`;
+            } else {
+                html += `
+                    <div class="result-card">
+                        <div style="text-align: center; color: #44ff44; padding: 1rem;">
+                            ✓ No threats detected
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Show validation status
+            html += `
+                <div class="result-card">
+                    <div class="result-item">
+                        <span class="result-label">Data Source</span>
+                        <span class="result-value">AlienVault OTX (Open Threat Exchange)</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Validated</span>
+                        <span class="result-value">${data.validation ? 'Community Validated' : 'Direct Lookup'}</span>
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentType = btn.dataset.type;
+                document.getElementById('searchInput').placeholder = 
+                    currentType === 'ip' ? 'Enter IP address (e.g., 8.8.8.8)' :
+                    currentType === 'domain' ? 'Enter domain name (e.g., google.com)' :
+                    'Enter full URL (e.g., https://example.com)';
+                updateExamples();
+                document.getElementById('searchInput').value = '';
+                document.getElementById('resultsContent').innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: #666;">
+                        Enter a ${currentType.toUpperCase()} above to lookup threat intelligence
+                    </div>
+                `;
+            });
         });
+
+        // Search button click
+        document.getElementById('searchBtn').addEventListener('click', performLookup);
+
+        // Enter key
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') performLookup();
+        });
+
+        // Initialize examples
+        updateExamples();
     </script>
 </body>
 </html>
