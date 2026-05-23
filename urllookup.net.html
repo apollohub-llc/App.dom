@@ -72,6 +72,13 @@
             border-radius: 50%; animation: spin 0.8s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
+        .tags {
+            display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 10px;
+        }
+        .tag {
+            background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 4px 10px;
+            border-radius: 20px; font-size: 12px; font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -100,6 +107,7 @@
             <div class="result-icon" id="resultIcon"></div>
             <div class="result-title" id="resultTitle"></div>
             <div class="result-detail" id="resultDetail"></div>
+            <div class="tags" id="resultTags"></div>
         </div>
 
         <div class="powered-by">
@@ -113,6 +121,10 @@
             const btn = document.getElementById('scanBtn');
             const loading = document.getElementById('loading');
             const result = document.getElementById('result');
+            const resultIcon = document.getElementById('resultIcon');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultDetail = document.getElementById('resultDetail');
+            const resultTags = document.getElementById('resultTags');
             
             let url = input.value.trim();
             
@@ -121,80 +133,99 @@
                 return;
             }
 
+            // Remove protocol for clean display, but keep it for lookup
+            let lookupUrl = url;
+            if (!lookupUrl.startsWith('http://') && !lookupUrl.startsWith('https://')) {
+                lookupUrl = 'https://' + url;
+            }
+
             // Reset UI
             result.style.display = 'none';
+            resultTags.innerHTML = '';
             loading.classList.add('active');
             btn.disabled = true;
             btn.textContent = 'Scanning...';
 
             try {
-                /*
-                  We use a public CORS proxy because the URLhaus API does not
-                  set CORS headers for browser requests. This is a standard 
-                  workaround for free and open APIs.
-                */
-                const proxyBase = 'https://api.allorigins.win/raw?url=';
-                const apiEndpoint = 'https://urlhaus-api.abuse.ch/v1/url/';
-                const targetApiUrl = proxyBase + encodeURIComponent(apiEndpoint);
+                // URLhaus API v1 - uses POST with form data
+                // No API key required, no CORS proxy needed
+                const apiUrl = 'https://urlhaus-api.abuse.ch/v1/url/';
                 
-                const formData = new FormData();
-                formData.append('url', url);
+                const formData = new URLSearchParams();
+                formData.append('url', lookupUrl);
 
-                const response = await fetch(targetApiUrl, {
+                const response = await fetch(apiUrl, {
                     method: 'POST',
-                    body: formData
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData.toString()
                 });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
                 const data = await response.json();
 
                 if (data.query_status === 'no_results') {
-                    // URL not found in malicious database
+                    // URL not found = likely safe
                     result.className = 'result safe';
-                    document.getElementById('resultIcon').textContent = '✅';
-                    document.getElementById('resultTitle').textContent = 'No Threats Found';
-                    document.getElementById('resultDetail').innerHTML = `
+                    resultIcon.textContent = '✅';
+                    resultTitle.textContent = 'No Threats Found';
+                    resultDetail.innerHTML = `
                         <strong>${url}</strong><br>
-                        URLhaus has no record of this URL. It is likely safe.<br>
-                        <em style="color: #888;">Always exercise caution with unknown links.</em>
+                        URLhaus has no record of this URL.<br>
+                        <em style="color: #888;">No known malware or phishing activity detected.</em>
                     `;
-                } else if (data.query_status === 'ok' || data.url_status) {
-                    // URL is in the database → MALICIOUS
-                    const threat = data.threat || 'malware_download';
-                    const tags = data.tags ? data.tags.join(', ') : 'none';
-                    const dateAdded = data.date_added ? data.date_added.split(' ')[0] : 'unknown date';
-                    
+                } else if (data.query_status === 'ok') {
+                    // URL found = malicious
                     result.className = 'result danger';
-                    document.getElementById('resultIcon').textContent = '🚨';
-                    document.getElementById('resultTitle').textContent = '⚠️ Malicious Site Detected!';
-                    document.getElementById('resultDetail').innerHTML = `
-                        <strong>${url}</strong> is in the URLhaus database of malicious websites.<br><br>
-                        <strong>Threat Type:</strong> ${threat}<br>
-                        <strong>Tags:</strong> ${tags}<br>
-                        <strong>First Reported:</strong> ${dateAdded}<br><br>
+                    resultIcon.textContent = '🚨';
+                    resultTitle.textContent = '⚠️ Malicious Site Detected!';
+                    
+                    const threat = data.threat || 'malware_download';
+                    const urlStatus = data.url_status || 'online';
+                    const dateAdded = data.date_added ? data.date_added.split(' ')[0] : 'unknown';
+                    
+                    resultDetail.innerHTML = `
+                        <strong>${url}</strong> is flagged in the URLhaus database.<br><br>
+                        <strong>Threat:</strong> ${threat}<br>
+                        <strong>Status:</strong> ${urlStatus}<br>
+                        <strong>First Seen:</strong> ${dateAdded}<br><br>
                         <a href="https://urlhaus.abuse.ch/url/${data.id || ''}" 
-                           target="_blank" 
+                           target="_blank" rel="noopener"
                            style="color: #ef4444; text-decoration: underline;">
                             View full report on URLhaus →
                         </a>
                     `;
+
+                    // Show tags if available
+                    if (data.tags && data.tags.length > 0) {
+                        data.tags.forEach(tag => {
+                            const tagEl = document.createElement('span');
+                            tagEl.className = 'tag';
+                            tagEl.textContent = tag;
+                            resultTags.appendChild(tagEl);
+                        });
+                    }
                 } else {
-                    // The API query itself failed unexpectedly
-                    result.className = 'result unknown';
-                    document.getElementById('resultIcon').textContent = '❓';
-                    document.getElementById('resultTitle').textContent = 'Lookup Failed';
-                    document.getElementById('resultDetail').textContent = 
-                        'The URLhaus service returned an unexpected response. Please try again later.';
+                    throw new Error('Unexpected API response');
                 }
                 
                 result.style.display = 'block';
                 
             } catch (error) {
+                console.error('Error details:', error);
                 result.className = 'result unknown';
-                document.getElementById('resultIcon').textContent = '⚠️';
-                document.getElementById('resultTitle').textContent = 'Connection Error';
-                document.getElementById('resultDetail').textContent = 
-                    'Unable to reach the URLhaus service. Please check your connection and try again.';
+                resultIcon.textContent = '⚠️';
+                resultTitle.textContent = 'Service Unavailable';
+                resultDetail.innerHTML = `
+                    Unable to reach URLhaus right now.<br>
+                    <em style="color: #888;">This might be a temporary issue. Try again in a moment.</em><br><br>
+                    <small style="color: #666;">Error: ${error.message}</small>
+                `;
                 result.style.display = 'block';
-                console.error('Fetch error:', error);
             } finally {
                 loading.classList.remove('active');
                 btn.disabled = false;
@@ -202,7 +233,7 @@
             }
         }
 
-        // Allow scanning by pressing the Enter key
+        // Enter key support
         document.getElementById('urlInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 scanURL();
