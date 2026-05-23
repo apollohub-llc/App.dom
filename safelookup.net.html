@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Safelookup Technologies - Portfolio</title>
+<style>
+:root{
+  --bg1:#f6f0ff;
+  --bg2:#e6fff7;
+  --accent:#6c5ce7;
+  --accent2:#00b894;
+  --muted:#6b7280;
+  --card:#ffffff;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));
+  color:#24303f;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+.wrapper{
+  margin-left:6%;
+  margin-right:6%;
+  padding-top:28px;
+  padding-bottom:28px;
+  max-width:1200px;
+}
+header{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:18px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.logo{
+  width:56px;
+  height:56px;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--accent),#00a8ff);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  font-weight:700;
+  font-size:20px;
+  box-shadow:0 6px 20px rgba(108,92,231,0.18);
+}
+.title{
+  font-size:20px;
+  font-weight:700;
+  letter-spacing:0.2px;
+}
+.subtitle{
+  font-size:13px;
+  color:var(--muted);
+  margin-top:-6px;
+}
+nav{
+  width:100%;
+  display:flex;
+  justify-content:center;
+}
+nav ul{
+  list-style:none;
+  padding:0;
+  margin:0;
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+nav a{
+  display:inline-block;
+  padding:10px 16px;
+  color:white;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  border-radius:999px;
+  text-decoration:none;
+  font-weight:600;
+  font-size:14px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.08);
+}
+nav a.secondary{
+  background:transparent;
+  color:var(--accent);
+  border:2px solid rgba(108,92,231,0.12);
+  box-shadow:none;
+}
+main.content{
+  margin-top:22px;
+  background:var(--card);
+  border-radius:12px;
+  padding:22px;
+  box-shadow:0 6px 24px rgba(16,24,40,0.06);
+}
+.hero{
+  width:100%;
+  height:auto;
+  border-radius:10px;
+  display:block;
+  object-fit:cover;
+  margin-bottom:18px;
+}
+.section{
+  margin-bottom:18px;
+}
+.h-row{
+  display:flex;
+  gap:18px;
+  align-items:flex-start;
+  flex-wrap:wrap;
+}
+.about{
+  flex:1 1 380px;
+}
+.quick{
+  flex:0 0 260px;
+  background:linear-gradient(180deg,#ffffff, #fbfdff);
+  border-radius:10px;
+  padding:14px;
+  box-shadow:0 6px 18px rgba(2,6,23,0.04);
+}
+.services-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
+  margin-top:12px;
+}
+.card{
+  background:linear-gradient(180deg,#ffffff,#fcfdff);
+  padding:14px;
+  border-radius:10px;
+  box-shadow:0 8px 28px rgba(13,20,35,0.04);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.card h4{margin:0;font-size:15px;color:#1f2a44}
+.card p{margin:0;color:var(--muted);font-size:13px}
+.card a{
+  margin-top:auto;
+  display:inline-block;
+  padding:8px 10px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  color:white;
+  text-decoration:none;
+  border-radius:8px;
+  font-weight:600;
+  font-size:13px;
+}
+.gallery{
+  display:flex;
+  gap:12px;
+  margin-top:12px;
+  flex-wrap:wrap;
+}
+.gallery img{
+  width:calc(33.333% - 8px);
+  border-radius:8px;
+  height:90px;
+  object-fit:cover;
+  flex:1 1 30%;
+  box-shadow:0 6px 18px rgba(2,6,23,0.05);
+}
+.contact{
+  background:linear-gradient(180deg,#ffffff,#fbfdff);
+  padding:12px;
+  border-radius:10px;
+}
+footer{
+  margin-top:20px;
+  text-align:center;
+  color:var(--muted);
+  font-size:14px;
+  padding:18px 6px;
+}
+@media (max-width:720px){
+  .logo{width:48px;height:48px;font-size:18px}
+  .title{font-size:18px}
+  .h-row{flex-direction:column}
+  .gallery img{height:80px}
+  nav a{padding:8px 12px;font-size:13px}
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+<header>
+<div class="brand">
+<div class="logo">SL</div>
+<div>
+<div class="title">Safelookup Technologies</div>
+<div class="subtitle">Reliable data, secure lookups, trusted insights</div>
+</div>
+</div>
+<nav>
+<ul>
+<li><a href="#about">About</a></li>
+<li><a href="#services">Services</a></li>
+<li><a href="#gallery" class="secondary">Gallery</a></li>
+<li><a href="#contact">Contact</a></li>
+</ul>
+</nav>
+</header>
+<main class="content">
+<img class="hero" src="https://picsum.photos/seed/safe1/1200/380" alt="Team collaborating in office">
+<section id="about" class="section">
+<div class="h-row">
+<div class="about">
+<h2 style="margin:0 0 8px 0;color:#14213d">Who we are</h2>
+<p style="color:var(--muted);margin:0 0 12px 0">Safelookup Technologies specializes in secure, privacy-minded lookup services and data solutions for businesses needing accurate contact and identity information. We combine modern tooling with careful data practices to deliver fast, reliable results.</p>
+<div class="gallery" id="gallery">
+<img src="https://picsum.photos/seed/safe2/400/300" alt="Office workstation">
+<img src="https://picsum.photos/seed/safe3/400/300" alt="Server room">
+<img src="https://picsum.photos/seed/safe4/400/300" alt="Team meeting">
+</div>
+</div>
+<div class="quick">
+<h3 style="margin:0 0 8px 0;color:#122033">Quick Info</h3>
+<p style="margin:0 0 8px 0;color:var(--muted);font-size:14px">Fast lookups · Secure handling · API & integrations</p>
+<div style="display:flex;gap:8px;margin-top:12px">
+<a href="#services" style="flex:1;padding:10px;background:linear-gradient(90deg,#6c5ce7,#00b894);color:white;text-align:center;border-radius:8px;text-decoration:none;font-weight:700">Explore Services</a>
+<a href="#contact" style="flex:1;padding:10px;background:transparent;border:2px solid rgba(108,92,231,0.12);color:var(--accent);text-align:center;border-radius:8px;text-decoration:none;font-weight:700">Contact Us</a>
+</div>
+</div>
+</div>
+</section>
+<section id="services" class="section">
+<h3 style="margin:0 0 8px 0;color:#14213d">Our Services</h3>
+<p style="margin:0 0 12px 0;color:var(--muted)">Click a service to see details and quick access links.</p>
+<div class="services-grid" id="services-grid"></div>
+</section>
+<section id="contact" class="section">
+<h3 style="margin:0 0 8px 0;color:#14213d">Contact</h3>
+<div class="h-row">
+<div style="flex:1 1 380px">
+<div class="contact">
+<p style="margin:0 0 8px 0;color:var(--muted)">For partnerships, support, or sales inquiries, reach out via the links or perform a quick lookup using our service links below.</p>
+<p style="margin:8px 0 0 0"><strong style="color:#122033">General:</strong> <a href="mailto:safelookuptechnologies@gmail.com" style="color:var(--accent)">info@safelookup.example</a></p>
+<p style="margin:6px 0 0 0"><strong style="color:#122033">Status:</strong> <span style="color:var(--muted)">Operational</span></p>
+</div>
+</div>
+<div style="flex:0 0 260px">
+<div class="card">
+<h4 style="margin:0 0 6px 0">Quick Lookup</h4>
+<p style="margin:0 0 8px 0;color:var(--muted)">Use our short lookup link for fast results.</p>
+<a id="quick-lookup" href="#" target="_blank">Open Lookup</a>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer>
+© Copyright 2023
+</footer>
+</div>
+<script>
+var servicesJson = {
+  "services":[
+    {
+      "id":"safelookup-phone",
+      "name":"Safelookup Phone Lookup",
+      "url":"http://da.gd/safelookup",
+      "description":"Quick phone number lookup service with basic carrier and line-type info.",
+      "tags":["lookup","phone","api"]
+    },
+    {
+      "id":"identity-verify",
+      "name":"Identity Verification",
+      "url":"https://example.com/identity",
+      "description":"Automated identity verification with fraud signals and scoring.",
+      "tags":["verification","fraud"]
+    },
+    {
+      "id":"data-integration",
+      "name":"Data Integration & API",
+      "url":"https://example.com/integrations",
+      "description":"Integrate our lookup tools into your platform via REST APIs and webhooks.",
+      "tags":["api","integration"]
+    }
+  ]
+};
+function createServiceCard(s){
+  var card = document.createElement(div);
+  card.className = card;
+  var h = document.createElement(h4);
+  h.textContent = s.name;
+  var p = document.createElement(p);
+  p.textContent = s.description;
+  var link = document.createElement(a);
+  link.href = s.url;
+  link.target = _blank;
+  link.rel = noopener noreferrer;
+  link.textContent = Open Service;
+  card.appendChild(h);
+  card.appendChild(p);
+  card.appendChild(link);
+  return card;
+}
+function renderServices(){
+  var grid = document.getElementById(services-grid);
+  servicesJson.services.forEach(function(s){
+    grid.appendChild(createServiceCard(s));
+  });
+  var quick = document.getElementById(quick-lookup);
+  quick.href = servicesJson.services[0].url;
+  quick.textContent = servicesJson.services[0].name;
+}
+document.addEventListener(DOMContentLoaded,renderServices);
+</script>
+</body>
+</html>
