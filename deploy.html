@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QueryDeploy · GZip + HashRouter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --surface: #111118;
+            --surface2: #1a1a24;
+            --border: #2a2a3a;
+            --accent: #00ff88;
+            --accent2: #7c3aed;
+            --text: #e8e8f0;
+            --muted: #5a5a7a;
+            --danger: #ff4466;
+            --warn: #ffaa00;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Syne', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .wrap {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-bottom: 48px;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .logo { display: flex; flex-direction: column; gap: 2px; }
+
+        .logo-tag {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--accent);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        .logo h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -2px;
+            color: var(--text);
+        }
+
+        .logo h1 span { color: var(--accent); }
+
+        .pill {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--muted);
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 100px;
+            white-space: nowrap;
+        }
+
+        .editor-block {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .editor-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            background: var(--surface2);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .editor-dots { display: flex; gap: 6px; }
+        .editor-dots span { width: 10px; height: 10px; border-radius: 50%; }
+        .editor-dots span:nth-child(1) { background: #ff5f57; }
+        .editor-dots span:nth-child(2) { background: #ffbd2e; }
+        .editor-dots span:nth-child(3) { background: #28c840; }
+
+        .char-info {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--muted);
+        }
+
+        .char-info .warn { color: var(--warn); }
+        .char-info .gzip-badge { color: var(--accent); margin-left: 12px; }
+
+        textarea {
+            width: 100%;
+            min-height: 380px;
+            padding: 20px;
+            background: transparent;
+            color: var(--text);
+            border: none;
+            outline: none;
+            resize: vertical;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.82rem;
+            line-height: 1.7;
+        }
+
+        textarea::placeholder { color: var(--muted); }
+
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 0.88rem;
+            padding: 14px 20px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            letter-spacing: 0.02em;
+        }
+
+        .btn:hover { transform: translateY(-2px); }
+        .btn:active { transform: translateY(0); }
+
+        .btn-deploy { background: var(--accent); color: #000; }
+        .btn-deploy:hover { box-shadow: 0 0 30px rgba(0,255,136,0.35); }
+
+        .btn-preview {
+            background: var(--surface2);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-preview:hover { border-color: var(--accent); color: var(--accent); }
+
+        .btn-clear {
+            background: var(--surface2);
+            color: var(--muted);
+            border: 1px solid var(--border);
+            padding: 14px 16px;
+        }
+        .btn-clear:hover { color: var(--danger); border-color: var(--danger); }
+
+        .url-box {
+            background: var(--surface);
+            border: 1px solid var(--accent);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            display: none;
+            animation: fadeUp 0.25s ease;
+        }
+        .url-box.show { display: block; }
+
+        .url-box-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.68rem;
+            color: var(--accent);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .url-row { display: flex; gap: 10px; align-items: stretch; }
+
+        .url-text {
+            flex: 1;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text);
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 14px;
+            word-break: break-all;
+            line-height: 1.5;
+        }
+
+        .btn-copy {
+            background: var(--accent2);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 18px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: opacity 0.15s, transform 0.15s;
+        }
+        .btn-copy:hover { opacity: 0.85; transform: translateY(-1px); }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.78rem;
+            padding: 12px 22px;
+            border-radius: 100px;
+            opacity: 0;
+            transition: all 0.25s ease;
+            pointer-events: none;
+            z-index: 999;
+            white-space: nowrap;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .toast.success { border-color: var(--accent); color: var(--accent); }
+        .toast.error { border-color: var(--danger); color: var(--danger); }
+
+        .preview-wrap { display: none; margin-bottom: 20px; }
+        .preview-wrap.show { display: block; animation: fadeUp 0.25s ease; }
+
+        .preview-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.68rem;
+            color: var(--muted);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 480px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: white;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 600px) {
+            .logo h1 { font-size: 2.2rem; }
+            .actions { grid-template-columns: 1fr 1fr; }
+            .btn-clear { grid-column: span 2; }
+            .url-row { flex-direction: column; }
+        }
+    </style>
+    <!-- pako.js: lightweight GZip compression/decompression (zlib port) -->
+    <script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
+</head>
+<body>
+
+<!-- Viewer script: detects hash fragment with gzipped+base64 payload -->
+<script>
+(function () {
+    // ---- GZip + Base64 decoder for # fragment ----
+    function utf8ToBinaryString(uint8Array) {
+        let out = '';
+        for (let i = 0; i < uint8Array.length; i++) {
+            out += String.fromCharCode(uint8Array[i]);
+        }
+        return out;
+    }
+
+    function decodeFromHash() {
+        let rawHash = window.location.hash.substring(1); // remove leading '#'
+        if (!rawHash) return null;
+        try {
+            // step1: url-safe base64 to standard base64?
+            let standardB64 = rawHash.replace(/-/g, '+').replace(/_/g, '/');
+            while (standardB64.length % 4) standardB64 += '=';
+            const binaryStr = atob(standardB64);
+            const compressedBytes = new Uint8Array(binaryStr.length);
+            for (let i = 0; i < binaryStr.length; i++) {
+                compressedBytes[i] = binaryStr.charCodeAt(i);
+            }
+            // inflate via pako
+            const decompressed = pako.inflate(compressedBytes, { to: 'string' });
+            return decompressed;
+        } catch (err) {
+            console.warn("Hash decode failed", err);
+            return null;
+        }
+    }
+
+    const htmlContent = decodeFromHash();
+    if (htmlContent && htmlContent.length > 0) {
+        // render full isolated iframe
+        document.documentElement.innerHTML = '';
+        const style = document.createElement('style');
+        style.textContent = '* { margin:0; padding:0; } html, body { width:100%; height:100%; overflow:hidden; background:white; }';
+        document.head.appendChild(style);
+        const iframe = document.createElement('iframe');
+        iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups allow-modals');
+        iframe.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;border:none;';
+        document.body.appendChild(iframe);
+        iframe.contentDocument.open();
+        iframe.contentDocument.write(htmlContent);
+        iframe.contentDocument.close();
+        throw new Error('__VIEWER_ACTIVE__');
+    }
+})();
+</script>
+
+<div class="wrap">
+    <header>
+        <div class="logo">
+            <span class="logo-tag">// gzip + hash-only deployment</span>
+            <h1>Query<span>Deploy</span></h1>
+        </div>
+        <span class="pill">🚀  GZip ·  #hash ·  no ?query</span>
+    </header>
+
+    <div class="editor-block">
+        <div class="editor-topbar">
+            <div class="editor-dots"><span></span><span></span><span></span></div>
+            <div class="char-info" id="charInfo">0 chars</div>
+        </div>
+        <textarea id="htmlInput" placeholder="Paste your full HTML/CSS/JS here (supports GZip compression!)&#10;Press Ctrl/Cmd + Enter to deploy instantly." spellcheck="false"></textarea>
+    </div>
+
+    <div class="actions">
+        <button class="btn btn-deploy" id="deployBtn">🗜️ GZip + Deploy</button>
+        <button class="btn btn-preview" id="previewBtn">👁 Preview</button>
+        <button class="btn btn-clear" id="clearBtn" title="Clear">✕</button>
+    </div>
+
+    <div class="url-box" id="urlBox">
+        <div class="url-box-label">▸ 🔗 GZipped URL (hash fragment)</div>
+        <div class="url-row">
+            <div class="url-text" id="urlText"></div>
+            <button class="btn-copy" id="copyBtn">Copy</button>
+        </div>
+        <div style="font-size:0.7rem; margin-top:10px; color:var(--muted); font-family:'Space Mono'">✨ Use <span style="color:var(--accent)">#</span> instead of ? — smaller & cleaner URLs thanks to GZip compression</div>
+    </div>
+
+    <div class="preview-wrap" id="previewWrap">
+        <div class="preview-label">▸ Live Preview</div>
+        <iframe id="previewFrame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals" title="preview"></iframe>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+    // ---------- GZip + Base64 (URL-safe) compressor ----------
+    function gzipAndEncode(htmlString) {
+        // 1. convert string to Uint8Array (UTF-8)
+        const encoder = new TextEncoder();
+        const inputBytes = encoder.encode(htmlString);
+        // 2. gzip compression via pako (deflate with gzip header)
+        const compressed = pako.gzip(inputBytes);
+        // 3. convert to base64 (binary -> base64)
+        let binary = '';
+        for (let i = 0; i < compressed.length; i++) {
+            binary += String.fromCharCode(compressed[i]);
+        }
+        let b64 = btoa(binary);
+        // 4. make URL-safe: replace '+' with '-', '/' with '_', remove '=' padding
+        const urlSafe = b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        return urlSafe;
+    }
+
+    // Helper: compute size ratio for visual feedback
+    function computeCompressionRatio(original, compressedSafeStr) {
+        // compressedSafeStr is url-safe base64, but we reconstruct byte length roughly.
+        // Reconstruct standard b64 length to estimate actual compressed size.
+        let padded = compressedSafeStr.replace(/-/g, '+').replace(/_/g, '/');
+        const padLen = (4 - (padded.length % 4)) % 4;
+        padded += '='.repeat(padLen);
+        const compressedBytes = (padded.length * 3) / 4; // approx
+        const originalBytes = new TextEncoder().encode(original).length;
+        if (originalBytes === 0) return 0;
+        return Math.floor((1 - compressedBytes / originalBytes) * 100);
+    }
+
+    // DOM elements
+    const htmlInput    = document.getElementById('htmlInput');
+    const deployBtn    = document.getElementById('deployBtn');
+    const previewBtn   = document.getElementById('previewBtn');
+    const clearBtn     = document.getElementById('clearBtn');
+    const copyBtn      = document.getElementById('copyBtn');
+    const urlBox       = document.getElementById('urlBox');
+    const urlText      = document.getElementById('urlText');
+    const previewWrap  = document.getElementById('previewWrap');
+    const previewFrame = document.getElementById('previewFrame');
+    const charInfo     = document.getElementById('charInfo');
+    const toast        = document.getElementById('toast');
+    let toastTimer;
+
+    function showToast(msg, type = 'success') {
+        toast.textContent = msg;
+        toast.className = `toast ${type} show`;
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function updateCharInfoWithStats(originalHtml = null) {
+        const raw = originalHtml !== undefined ? originalHtml : htmlInput.value;
+        const len = raw.length;
+        let extraHtml = '';
+        if (len > 0) {
+            try {
+                const compressedPreview = gzipAndEncode(raw);
+                const ratio = computeCompressionRatio(raw, compressedPreview);
+                extraHtml = `<span class="gzip-badge">🗜️ GZip: ~${ratio}% smaller</span>`;
+            } catch(e) { extraHtml = `<span class="gzip-badge" style="color:var(--warn)">⚠️ compression err</span>`; }
+        }
+        charInfo.innerHTML = (len > 8000 ? `<span class="warn">⚠ ${len.toLocaleString()} chars</span>` : `${len.toLocaleString()} chars`) + ' ' + extraHtml;
+    }
+
+    function renderPreview() {
+        const html = htmlInput.value.trim();
+        if (!html) { showToast('Nothing to preview.', 'error'); return; }
+        const blob = new Blob([html], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        previewFrame.onload = () => URL.revokeObjectURL(url);
+        previewFrame.src = url;
+        previewWrap.classList.add('show');
+    }
+
+    // main deploy: compress -> build hash url (replace ? with #)
+    function deployToHash() {
+        let html = htmlInput.value.trim();
+        if (!html) { showToast('Paste HTML content first.', 'error'); return; }
+        try {
+            // step: GZip + url-safe base64
+            const compressedHashPart = gzipAndEncode(html);
+            // Build URL without any query parameters: only fragment
+            const baseUrl = window.location.href.split('#')[0].split('?')[0]; // strip existing hash/query
+            const deployUrl = baseUrl + '#' + compressedHashPart;
+            // update URL text + box
+            urlText.textContent = deployUrl;
+            urlBox.classList.add('show');
+            // replace current state (without reload but preserve back button)
+            window.history.pushState({}, '', deployUrl);
+            // show success + ratio info
+            const originalSize = new TextEncoder().encode(html).length;
+            const compressedSizeEstimate = (compressedHashPart.length * 3) / 4; // rough
+            const savedPercent = originalSize > 0 ? Math.floor((1 - compressedSizeEstimate/originalSize)*100) : 0;
+            showToast(`✅ Deployed with GZip! Saved ~${savedPercent}% · ${(originalSize/1024).toFixed(1)}KB → ${(compressedSizeEstimate/1024).toFixed(1)}KB`);
+            // auto refresh preview to match deployed version
+            renderPreview();
+            updateCharInfoWithStats(html);
+        } catch (err) {
+            console.error(err);
+            showToast('Compression failed: ' + err.message, 'error');
+        }
+    }
+
+    function copyURL() {
+        const url = urlText.textContent;
+        if (!url) { showToast('No URL to copy yet. Deploy first!', 'error'); return; }
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(url).catch(() => fallbackCopy(url));
+        } else {
+            fallbackCopy(url);
+        }
+        showToast('📋 GZip URL copied!');
+    }
+
+    function fallbackCopy(text) {
+        const t = document.createElement('textarea');
+        t.value = text;
+        document.body.appendChild(t);
+        t.select();
+        document.execCommand('copy');
+        document.body.removeChild(t);
+    }
+
+    function clearAll() {
+        htmlInput.value = '';
+        updateCharInfoWithStats('');
+        previewWrap.classList.remove('show');
+        previewFrame.src = 'about:blank';
+        urlBox.classList.remove('show');
+        const cleanUrl = window.location.href.split('#')[0];
+        window.history.pushState({}, '', cleanUrl);
+        showToast('Editor cleared · hash removed');
+    }
+
+    // Event listeners
+    htmlInput.addEventListener('input', () => {
+        updateCharInfoWithStats();
+        urlBox.classList.remove('show'); // hide old url when typing
+    });
+
+    deployBtn.addEventListener('click', deployToHash);
+    previewBtn.addEventListener('click', renderPreview);
+    clearBtn.addEventListener('click', clearAll);
+    copyBtn.addEventListener('click', copyURL);
+
+    htmlInput.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+            e.preventDefault();
+            deployToHash();
+        }
+    });
+
+    // ---- Hydrate from existing hash on page load (if any) ----
+    function loadFromHashOnStart() {
+        const currentHash = window.location.hash.substring(1);
+        if (!currentHash) return;
+        try {
+            // decode: revert url-safe to standard base64 + inflate
+            let standardB64 = currentHash.replace(/-/g, '+').replace(/_/g, '/');
+            while (standardB64.length % 4) standardB64 += '=';
+            const binaryStr = atob(standardB64);
+            const compressedBytes = new Uint8Array(binaryStr.length);
+            for (let i = 0; i < binaryStr.length; i++) compressedBytes[i] = binaryStr.charCodeAt(i);
+            const decompressed = pako.inflate(compressedBytes, { to: 'string' });
+            if (decompressed) {
+                htmlInput.value = decompressed;
+                updateCharInfoWithStats(decompressed);
+                renderPreview();    // show preview automatically
+                // Also show the deploy box but without polluting history (already hash present)
+                const baseClean = window.location.href.split('#')[0];
+                const deployUrl = baseClean + '#' + currentHash;
+                urlText.textContent = deployUrl;
+                urlBox.classList.add('show');
+                showToast('📦 Loaded GZip encoded page from #', 'success');
+            }
+        } catch (err) {
+            console.warn("init hash decode error", err);
+            showToast('Invalid compressed hash fragment', 'error');
+        }
+    }
+
+    // initial stats + attempt to load from hash
+    updateCharInfoWithStats();
+    loadFromHashOnStart();
+
+    // listen to hash changes (if user manually clicks back/forward)
+    window.addEventListener('hashchange', () => {
+        const newHash = window.location.hash.substring(1);
+        if (!newHash) {
+            // optional: clear UI only if we want? but better not to destroy user text
+            urlBox.classList.remove('show');
+            return;
+        }
+        try {
+            let standardB64 = newHash.replace(/-/g, '+').replace(/_/g, '/');
+            while (standardB64.length % 4) standardB64 += '=';
+            const binaryStr = atob(standardB64);
+            const compressedBytes = new Uint8Array(binaryStr.length);
+            for (let i = 0; i < binaryStr.length; i++) compressedBytes[i] = binaryStr.charCodeAt(i);
+            const decompressed = pako.inflate(compressedBytes, { to: 'string' });
+            if (decompressed) {
+                htmlInput.value = decompressed;
+                updateCharInfoWithStats(decompressed);
+                renderPreview();
+                const baseClean = window.location.href.split('#')[0];
+                urlText.textContent = baseClean + '#' + newHash;
+                urlBox.classList.add('show');
+                showToast('↺ Loaded compressed page from history');
+            }
+        } catch (e) {
+            showToast('Hash decode error', 'error');
+        }
+    });
+</script>
+</body>
+</html>
